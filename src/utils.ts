@@ -1,5 +1,5 @@
 import type { Session } from './types';
-import { START_HOUR, TOTAL_MINUTES, MIN_SESSION_DURATION, DEFAULT_SESSION_DURATION } from './constants';
+import { START_HOUR, TOTAL_MINUTES, MIN_SESSION_DURATION, DEFAULT_SESSION_DURATION, MODERN_PALETTE } from './constants';
 
 export const findFirstAvailableSlot = (
     roomId: string,
@@ -59,12 +59,21 @@ export const isColliding = (
     });
 };
 
-export const getContrastText = (hexcolor: string): string => {
-    if (!hexcolor || hexcolor.length < 6) return '#1e293b';
-    const hex = hexcolor.replace('#', '');
+export const getSessionTextColor = (bgColor: string): string => {
+    if (!bgColor || typeof bgColor !== 'string') return '#1e293b';
+    const paletteMatch = MODERN_PALETTE.find(p => p.bg.toLowerCase() === bgColor.toLowerCase());
+    if (paletteMatch) return paletteMatch.text;
+    
+    // Fallback to standard contrast if color is custom
+    if (!bgColor || bgColor.length < 6) return '#1e293b';
+    const hex = bgColor.replace('#', '');
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
     const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
     return (yiq >= 150) ? '#1e293b' : '#f8fafc';
+};
+
+export const getContrastText = (hexcolor: string): string => {
+    return getSessionTextColor(hexcolor);
 };

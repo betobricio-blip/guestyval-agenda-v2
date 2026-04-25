@@ -89,7 +89,7 @@ export const PersistenceModal: React.FC<PersistenceModalProps> = ({
                                         <div>
                                             <h4 className="font-bold text-slate-700 group-hover:text-emerald-900">{config.name}</h4>
                                             <p className="text-[10px] text-slate-400 mt-0.5">
-                                                {new Date(config.timestamp).toLocaleString()} • {config.rooms['day-1'].length + config.rooms['day-2'].length} Rooms
+                                                {config.timestamp ? new Date(config.timestamp).toLocaleString() : 'Legacy Save'} • {config.rooms?.length || 0} Rooms • {config.sessions?.length || 0} Sessions
                                             </p>
                                         </div>
                                         <button

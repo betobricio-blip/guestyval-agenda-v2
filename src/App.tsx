@@ -10,7 +10,7 @@ import { LoginOverlay } from './components/LoginOverlay'
 import { ExporterView } from './components/ExporterView'
 import type { Day, Room, Session, ViewMode, RoomDaySettings } from './types'
 import { findFirstAvailableSlot, isColliding } from './utils'
-import { PIXELS_PER_MINUTE, MIN_SESSION_DURATION } from './constants'
+import { PIXELS_PER_MINUTE, MIN_SESSION_DURATION, GRID_HEADER_HEIGHT, MODERN_PALETTE } from './constants'
 import { Settings, Plus, X, Eye, EyeOff, Layout } from 'lucide-react'
 
 // Core Constants
@@ -54,18 +54,7 @@ const INITIAL_ROOMS: Room[] = [
   },
 ];
 
-const COLORS = [
-  '#1e293b', // Slate
-  '#064e3b', // Emerald
-  '#fef3c7', // Sand
-  '#881337', // Rose
-  '#312e81', // Indigo
-  '#0f172a', // Deep Navy
-  '#166534', // Forest Green
-  '#9a3412', // Burnt Orange
-  '#701a75', // Plum
-  '#a16207'  // Gold
-];
+const COLORS = MODERN_PALETTE.map(p => p.bg);
 
 // Helper Popover Component
 const RangeSettingsPopover = ({ current, onApply, onClose }: { current: DaySettings, onApply: (up: Partial<DaySettings>) => void, onClose: () => void }) => {
@@ -316,6 +305,29 @@ function App() {
   };
 
   const handleUpdateDaySettings = (dayId: string, updates: Partial<DaySettings>) => {
+    if (updates.startHour !== undefined) {
+      const currentStartHour = daySettings[dayId].startHour;
+      if (updates.startHour > currentStartHour) {
+        const daySessions = sessions.filter(s => s.dayId === dayId);
+        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime) < (updates.startHour * 60));
+        if (hasConflicts) {
+          toast.error(`Cannot adjust grid: A session currently exists which falls outside the new boundaries. Please move or delete the session first.`);
+          return;
+        }
+      }
+    }
+    if (updates.endHour !== undefined) {
+      const currentEndHour = daySettings[dayId].endHour;
+      if (updates.endHour < currentEndHour) {
+        const currentStartHour = daySettings[dayId].startHour;
+        const daySessions = sessions.filter(s => s.dayId === dayId);
+        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime + s.duration) > (updates.endHour * 60));
+        if (hasConflicts) {
+          toast.error(`Cannot adjust grid: A session currently exists which falls outside the new boundaries. Please move or delete the session first.`);
+          return;
+        }
+      }
+    }
     setDaySettings(prev => ({ ...prev, [dayId]: { ...prev[dayId], ...updates } }));
   };
 
@@ -474,7 +486,8 @@ function App() {
       <div className="flex flex-1 overflow-x-auto overflow-y-auto relative print:overflow-visible print:w-full print:block bg-white pb-32 no-scrollbar">
         {/* Sticky Sidebar (Settings + Time Axis) */}
         <div className="sticky left-0 top-0 z-[110] flex flex-col shrink-0 no-print border-r bg-slate-50 border-slate-200 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
-            <div className="h-[60px] w-[64px] border-b flex items-center justify-center bg-white border-slate-200">
+            {/* Settings Gear - Absolute so it doesn't push the axis coordinate system */}
+            <div className="absolute top-0 left-0 w-full flex items-center justify-center bg-white border-b border-slate-200 z-[120]" style={{ height: `${GRID_HEADER_HEIGHT}px` }}>
                 <button 
                     onClick={() => setShowSettings(showSettings === dayId ? null : dayId)} 
                     className="h-9 w-9 flex items-center justify-center bg-slate-50 rounded-xl border border-slate-200 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 hover:border-emerald-200 transition-all active:scale-95 shadow-sm"
@@ -490,9 +503,8 @@ function App() {
                     />
                 )}
             </div>
-            <div className="flex-1 bg-slate-50/50 backdrop-blur-sm">
-                <TimeAxis startHour={settings.startHour} endHour={settings.endHour} />
-            </div>
+            
+            <TimeAxis startHour={settings.startHour} endHour={settings.endHour} />
         </div>
 
         {/* Room Columns */}
@@ -523,6 +535,7 @@ function App() {
                   onInitiateDrag={(e) => initiateDrag(s.id, e)}
                   startHour={settings.startHour} 
                   isDimmed={dragState?.sessionId === s.id}
+                  suppressHover={!!editingSession || !!persistenceMode || showExporter || showGlobalSettings}
                   tooltipPosition={roomIdx === visibleRooms.length - 1 ? 'left' : 'right'}
                 />
             ))}
@@ -654,7 +667,17 @@ function App() {
             </div>
           )}
       </main>
-      {editingSession && <SessionModal session={editingSession} onClose={() => setEditingSession(null)} onUpdate={updates => handleUpdateSession(editingSession.id, updates)} onDelete={id => { setSessions(prev => prev.filter(s => s.id !== id)); setEditingSession(null); toast.success('Session deleted'); }} sessions={sessions} startHour={daySettings[editingSession.dayId].startHour} endHour={daySettings[editingSession.dayId].endHour} />}
+      {editingSession && (
+        <SessionModal 
+          session={editingSession} 
+          onClose={() => setEditingSession(null)} 
+          onUpdate={updates => handleUpdateSession(editingSession.id, updates)} 
+          onDelete={id => { setSessions(prev => prev.filter(s => s.id !== id)); setEditingSession(null); toast.success('Session deleted'); }} 
+          sessions={sessions} 
+          startHour={daySettings[editingSession.dayId]?.startHour || START_HOUR} 
+          endHour={daySettings[editingSession.dayId]?.endHour || END_HOUR} 
+        />
+      )}
       {persistenceMode && <PersistenceModal mode={persistenceMode} onClose={() => setPersistenceMode(null)} onSave={handleSaveApp} onSelect={c => { setRooms(c.rooms); setSessions(c.sessions); setDaySettings(c.daySettings); setActiveSaveName(c.name); if(c.eventName) setEventName(c.eventName); setPersistenceMode(null);}} />}
       {showExporter && <ExporterView rooms={rooms} sessions={sessions} eventName={eventName} onClose={() => setShowExporter(false)} daySettings={daySettings} />}
       

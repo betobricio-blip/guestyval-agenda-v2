@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GripVertical, Mic, User, Star } from 'lucide-react';
 import { getContrastText } from '../utils';
-import { PIXELS_PER_MINUTE, minutesToTime } from '../constants';
+import { PIXELS_PER_MINUTE, minutesToTime, GRID_GUTTER_TOP } from '../constants';
 import type { Session } from '../types';
 
 interface SessionCellProps {
@@ -10,6 +10,7 @@ interface SessionCellProps {
     onInitiateDrag: (e: React.MouseEvent) => void;
     startHour: number;
     isDimmed?: boolean;
+    suppressHover?: boolean;
     tooltipPosition?: 'left' | 'right';
 }
 
@@ -19,6 +20,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
     onInitiateDrag, 
     startHour,
     isDimmed,
+    suppressHover,
     tooltipPosition = 'right'
 }) => {
     const { name, description, startTime, duration, color, speakers, type } = session;
@@ -29,12 +31,12 @@ export const SessionCell: React.FC<SessionCellProps> = ({
 
     const sessionStyle: React.CSSProperties = {
         position: 'absolute',
-        top: `${startTime * PIXELS_PER_MINUTE + 20}px`,
+        top: `${startTime * PIXELS_PER_MINUTE + GRID_GUTTER_TOP}px`,
         height: `${duration * PIXELS_PER_MINUTE}px`,
         left: '4px',
         right: '4px',
         backgroundColor: color,
-        zIndex: isHovered ? 40 : (isDimmed ? 10 : 20),
+        zIndex: isHovered ? 100 : (isDimmed ? 10 : 20),
         cursor: 'default',
         transition: 'all 0.1s ease',
         borderRadius: '8px',
@@ -55,7 +57,11 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => { e.stopPropagation(); onClick(); }}
+            onClick={(e) => { 
+                e.stopPropagation(); 
+                setIsHovered(false); 
+                onClick(); 
+            }}
             style={sessionStyle}
             className="flex items-stretch group overflow-visible hover:brightness-95 select-none"
         >
@@ -91,8 +97,8 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             </div>
 
             {/* Speaker Info Popover (Hover Tooltip) */}
-            {isHovered && !isDimmed && (
-                <div className={tooltipClasses}>
+            {isHovered && !isDimmed && !suppressHover && (
+                <div className={tooltipClasses} style={{ zIndex: 50 }}>
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col border-b border-slate-100 pb-2">
                             <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest leading-tight">{type || 'Session'}</span>

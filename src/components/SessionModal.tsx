@@ -4,28 +4,18 @@ import {
     X, Trash2, ChevronDown, Plus, User, Mic, ChevronUp, 
     ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench, Sparkles, MoveUp, MoveDown 
 } from 'lucide-react';
+import { PIXELS_PER_MINUTE, minutesToTime, MODERN_PALETTE } from '../constants';
 import { getContrastText } from '../utils';
 
-const COLORS = [
-    '#1e293b', // Slate
-    '#064e3b', // Emerald
-    '#fef3c7', // Sand
-    '#881337', // Rose
-    '#312e81', // Indigo
-    '#0f172a', // Deep Navy
-    '#166534', // Forest Green
-    '#9a3412', // Burnt Orange
-    '#701a75', // Plum
-    '#a16207'  // Gold
-];
+const COLORS = MODERN_PALETTE.map(p => p.bg);
 
 const PRESETS: Record<string, { icon: any, color: string, label: string }> = {
-  'Keynote': { icon: Mic, color: '#312e81', label: 'Keynote' },
-  'Panel': { icon: Users, color: '#1e293b', label: 'Panel' },
-  'Break': { icon: Coffee, color: '#fef3c7', label: 'Break' },
-  'Workshop': { icon: Wrench, color: '#064e3b', label: 'Workshop' },
-  'Highlight': { icon: Sparkles, color: '#881337', label: 'Event' },
-  'Other': { icon: User, color: '#f1f5f9', label: 'Session' }
+  'Keynote': { icon: Mic, color: '#D9D7E8', label: 'Keynote' },      // Lavender
+  'Panel': { icon: Users, color: '#D0D7E1', label: 'Panel' },        // Slate
+  'Break': { icon: Coffee, color: '#E8DFD0', label: 'Break' },      // Sand
+  'Workshop': { icon: Wrench, color: '#D1E2D3', label: 'Workshop' }, // Sage
+  'Highlight': { icon: Sparkles, color: '#EAD5D5', label: 'Event' }, // Dusty Rose
+  'Other': { icon: User, color: '#CCE2E2', label: 'Session' }        // Eucalyptus
 };
 
 interface SessionModalProps {
@@ -172,7 +162,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-200 flex flex-col max-h-[90vh]">
                 {/* Header */}
                 <div className="px-6 py-5 border-b bg-white flex items-center justify-between shrink-0">
@@ -320,8 +310,8 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                         </div>
 
                         {/* Speaker Management Section */}
-                        <div className="space-y-4 border-l pl-6 flex flex-col min-h-0">
-                            <div className="flex items-center justify-between shrink-0 mb-2">
+                        <div className="space-y-4 border-l pl-0 flex flex-col min-h-0">
+                                <div className="flex items-center justify-between shrink-0 mb-2 px-6">
                                 <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">Speakers ({speakers.length}/5)</label>
                                 <button 
                                     onClick={handleAddSpeaker} 
@@ -332,7 +322,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                                 </button>
                             </div>
 
-                            <div className="space-y-6 overflow-y-auto pr-2 flex-1 pb-4">
+                            <div className="space-y-6 overflow-y-auto px-6 flex-1 pb-4">
                                 {speakers.length === 0 && (
                                     <div className="text-center py-12 border-2 border-dashed border-slate-100 rounded-3xl opacity-40 bg-slate-50/50">
                                         <User size={32} className="mx-auto mb-3 text-slate-300" />
@@ -340,26 +330,26 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                                     </div>
                                 )}
                                 {speakers.map((s, idx) => (
-                                    <div key={s.id} className="p-5 bg-white rounded-2xl border border-slate-200 relative group animate-in slide-in-from-right-2 hover:border-slate-400 transition-colors shadow-sm flex gap-4">
-                                        {/* Small Tucked Reordering Arrows */}
-                                        <div className="flex flex-col justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div key={s.id} className="p-5 bg-white rounded-2xl border border-slate-200 relative group animate-in slide-in-from-right-2 hover:border-slate-400 transition-colors shadow-sm">
+                                        {/* Small Tucked Reordering Arrows: Positioned Absolutely on Right to avoid pushing content */}
+                                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                                             <button 
                                                 disabled={idx === 0}
                                                 onClick={() => handleMoveSpeaker(idx, 'up')}
-                                                className="p-1 text-slate-300 hover:text-slate-900 disabled:opacity-0"
+                                                className="p-1 text-slate-300 hover:text-slate-900 disabled:opacity-0 bg-white/80 rounded-md shadow-sm border border-slate-100"
                                             >
-                                                <MoveUp size={12} />
+                                                <MoveUp size={10} />
                                             </button>
                                             <button 
                                                 disabled={idx === speakers.length - 1}
                                                 onClick={() => handleMoveSpeaker(idx, 'down')}
-                                                className="p-1 text-slate-300 hover:text-slate-900 disabled:opacity-0"
+                                                className="p-1 text-slate-300 hover:text-slate-900 disabled:opacity-0 bg-white/80 rounded-md shadow-sm border border-slate-100"
                                             >
-                                                <MoveDown size={12} />
+                                                <MoveDown size={10} />
                                             </button>
                                         </div>
 
-                                        <div className="flex-1 space-y-4">
+                                        <div className="space-y-4 pr-8">
                                             {/* Line 1: Full Name */}
                                             <div className="space-y-1.5">
                                                 <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
