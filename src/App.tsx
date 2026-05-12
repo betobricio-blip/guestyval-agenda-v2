@@ -617,15 +617,26 @@ function App() {
             const savedConfigurations = data.saved || (Array.isArray(data) ? data : []);
 
             if (currentState) {
+                // Update state directly to trigger re-render and persistence effect
+                if (currentState.rooms) setRooms(currentState.rooms);
+                if (currentState.sessions) setSessions(currentState.sessions);
+                if (currentState.daySettings) setDaySettings(currentState.daySettings);
+                if (currentState.viewMode) setViewMode(currentState.viewMode);
+                if (currentState.eventName) setEventName(currentState.eventName);
+                
+                // Also update localStorage for safety before reload
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
             }
+            
             if (savedConfigurations.length > 0) {
                 localStorage.setItem('guestyval_saved', JSON.stringify(savedConfigurations));
             }
 
-            toast.success('Data imported. Reloading builder...');
-            setTimeout(() => window.location.reload(), 1200);
+            toast.success('Data imported successfully');
+            // Small delay before reload to ensure state persistence completes
+            setTimeout(() => window.location.reload(), 500);
         } catch (error) {
+            console.error('Import error:', error);
             toast.error('Failed to import: Invalid file format');
         }
     };
