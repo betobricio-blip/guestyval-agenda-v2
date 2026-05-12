@@ -11,7 +11,8 @@ import { ExporterView } from './components/ExporterView'
 import type { Day, Room, Session, ViewMode, RoomDaySettings } from './types'
 import { findFirstAvailableSlot, isColliding } from './utils'
 import { PIXELS_PER_MINUTE, MIN_SESSION_DURATION, GRID_HEADER_HEIGHT, MODERN_PALETTE } from './constants'
-import { Settings, Plus, X, Eye, EyeOff, Layout } from 'lucide-react'
+import initialData from './data/initialData.json'
+import { Settings, Plus, X, Eye, EyeOff, Layout, Lock } from 'lucide-react'
 
 // Core Constants
 const START_HOUR = 8;
@@ -159,6 +160,7 @@ function App() {
 
   const [eventName, setEventName] = useState<string>('GuestyVal 2026');
   const [showGlobalSettings, setShowGlobalSettings] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const [dragState, setDragState] = useState<{
     sessionId: string;
@@ -177,9 +179,8 @@ function App() {
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const config = JSON.parse(saved);
+    try {
+        const config = saved ? JSON.parse(saved) : initialData;
         let finalRooms: Room[] = [];
         
         // MIGRATION: Record<string, Room[]> -> Room[]
@@ -248,7 +249,6 @@ function App() {
       } catch (e) {
         console.error('Storage sync failed', e);
       }
-    }
   }, []);
 
   useEffect(() => {
@@ -332,6 +332,7 @@ function App() {
   };
 
   const handleAddRoom = () => {
+    if (!isAuthenticated) return;
     const name = window.prompt("Enter new Room Name:", "Workshop Room");
     if (!name) return;
 
@@ -349,7 +350,7 @@ function App() {
   };
 
   const handleAddSession = () => {
-    if (!activeRoomId) return;
+    if (!isAuthenticated || !activeRoomId) return;
     let roomDayId = activeDayId;
     const settings = daySettings[roomDayId];
     const slot = findFirstAvailableSlot(activeRoomId, roomDayId, sessions, settings.startHour, settings.endHour);
@@ -370,6 +371,7 @@ function App() {
   };
 
   const handleUpdateSession = (sessionId: string, updates: Partial<Session>) => {
+    if (!isAuthenticated) return;
     setSessions(prev => prev.map(s => {
       if (s.id !== sessionId) return s;
       const updated = { ...s, ...updates };
@@ -386,6 +388,7 @@ function App() {
   };
 
   const handleDrawComplete = (dayId: string, roomId: string, startTime: number, duration: number) => {
+    if (!isAuthenticated) return;
     const finalDuration = Math.max(MIN_SESSION_DURATION, duration);
     const newSession: Session = {
       id: `s${Math.random().toString(36).substring(2, 9)}`,
@@ -526,17 +529,19 @@ function App() {
             dragGhostStartTime={dragGhost?.roomId === room.id && dragGhost?.dayId === dayId ? dragGhost.startTime : undefined}
             dragGhostDuration={dragState ? sessions.find(s => s.id === dragState.sessionId)?.duration : undefined}
             dragGhostIsBlocked={dragGhost?.roomId === room.id && dragGhost?.dayId === dayId ? dragGhost.isOverlapping : undefined}
+            readOnly={!isAuthenticated}
           >
             {sessions.filter(s => s.roomId === room.id && s.dayId === dayId).map(s => (
                 <SessionCell 
                   key={s.id} 
                   session={s} 
-                  onClick={() => !dragState && setEditingSession(s)} 
-                  onInitiateDrag={(e) => initiateDrag(s.id, e)}
+                  onClick={() => !dragState && isAuthenticated && setEditingSession(s)} 
+                  onInitiateDrag={(e) => isAuthenticated && initiateDrag(s.id, e)}
                   startHour={settings.startHour} 
                   isDimmed={dragState?.sessionId === s.id}
                   suppressHover={!!editingSession || !!persistenceMode || showExporter || showGlobalSettings}
                   tooltipPosition={roomIdx === visibleRooms.length - 1 ? 'left' : 'right'}
+                  readOnly={!isAuthenticated}
                 />
             ))}
           </RoomColumn>
@@ -627,18 +632,22 @@ function App() {
     reader.readAsText(file);
   };
 
-  if (!isAuthenticated) {
-    return (
-        <div className="h-screen bg-[#0d4741]">
-            <Toaster position="bottom-right" />
-            <LoginOverlay onLogin={handleLogin} />
-        </div>
-    );
-  }
+  // Remove early return to allow Read-Only mode
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 overflow-hidden font-sans">
+    <div className="flex flex-col h-screen bg-slate-50 overflow-hidden font-sans group/app">
       <Toaster position="bottom-right" />
+      {!isAuthenticated && (
+        <div className="fixed bottom-6 right-6 z-[1000] no-print">
+          <button 
+            onClick={() => setShowLogin(true)}
+            className="flex items-center gap-2 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl hover:bg-emerald-600 transition-all active:scale-95 group font-black text-[11px] uppercase tracking-widest"
+          >
+            <Lock size={16} />
+            Editor Login
+          </button>
+        </div>
+      )}
       <TopNav 
         viewMode={viewMode} 
         setViewMode={setViewMode} 
@@ -654,6 +663,7 @@ function App() {
         onOpenGlobalSettings={() => setShowGlobalSettings(true)}
         activeDayName={activeDayName} 
         activeSaveName={activeSaveName} 
+        isAuthenticated={isAuthenticated}
       />
       <main className="flex-1 overflow-hidden flex flex-col print:overflow-visible bg-white">
           {viewMode === 'Split' ? (
@@ -667,7 +677,7 @@ function App() {
             </div>
           )}
       </main>
-      {editingSession && (
+      {editingSession && isAuthenticated && (
         <SessionModal 
           session={editingSession} 
           onClose={() => setEditingSession(null)} 
@@ -713,6 +723,24 @@ function App() {
                 Close & Save
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showLogin && (
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-md">
+            <button 
+              onClick={() => setShowLogin(false)}
+              className="absolute top-4 right-4 text-white/50 hover:text-white z-[2100]"
+            >
+              <X size={24} />
+            </button>
+            <LoginOverlay onLogin={(pass) => {
+              const success = handleLogin(pass);
+              if (success) setShowLogin(false);
+              return success;
+            }} />
           </div>
         </div>
       )}

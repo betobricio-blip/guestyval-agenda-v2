@@ -1,0 +1,65 @@
+{
+  "rooms": [
+    {
+      "id": "r1",
+      "name": "Main Stage",
+      "daySettings": {
+        "day-1": {
+          "capacity": 100,
+          "setupType": "Theater",
+          "isHidden": false
+        },
+        "day-2": {
+          "capacity": 100,
+          "setupType": "Theater",
+          "isHidden": false
+        }
+      }
+    },
+    {
+      "id": "r2",
+      "name": "Masterclasses",
+      "daySettings": {
+        "day-1": {
+          "capacity": 100,
+          "setupType": "Theater",
+          "isHidden": false
+        },
+        "day-2": {
+          "capacity": 100,
+          "setupType": "Theater",
+          "isHidden": false
+        }
+      }
+    },
+    {
+      "id": "r3",
+      "name": "Workshops",
+      "daySettings": {
+        "day-1": {
+          "capacity": 100,
+          "setupType": "Theater",
+          "isHidden": false
+        },
+        "day-2": {
+          "capacity": 100,
+          "setupType": "Theater",
+          "isHidden": false
+        }
+      }
+    }
+  ],
+  "sessions": [],
+  "daySettings": {
+    "day-1": {
+      "startHour": 8,
+      "endHour": 18
+    },
+    "day-2": {
+      "startHour": 8,
+      "endHour": 18
+    }
+  },
+  "viewMode": "Day 1",
+  "eventName": "GuestyVal 2026"
+}

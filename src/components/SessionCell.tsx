@@ -12,6 +12,7 @@ interface SessionCellProps {
     isDimmed?: boolean;
     suppressHover?: boolean;
     tooltipPosition?: 'left' | 'right';
+    readOnly?: boolean;
 }
 
 export const SessionCell: React.FC<SessionCellProps> = ({ 
@@ -21,7 +22,8 @@ export const SessionCell: React.FC<SessionCellProps> = ({
     startHour,
     isDimmed,
     suppressHover,
-    tooltipPosition = 'right'
+    tooltipPosition = 'right',
+    readOnly
 }) => {
     const { name, description, startTime, duration, color, speakers, type } = session;
     const [isHovered, setIsHovered] = useState(false);
@@ -58,6 +60,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             onMouseLeave={() => setIsHovered(false)}
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => { 
+                if (readOnly) return;
                 e.stopPropagation(); 
                 setIsHovered(false); 
                 onClick(); 
@@ -65,17 +68,18 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             style={sessionStyle}
             className="flex items-stretch group overflow-visible hover:brightness-95 select-none"
         >
-            {/* Drag Handle */}
-            <div 
-                className="w-5 flex items-center justify-center cursor-greedy active:cursor-grabbing hover:bg-black/5 transition-colors shrink-0 border-r border-black/5 z-10"
-                onMouseDown={(e) => {
-                    e.stopPropagation();
-                    onInitiateDrag(e);
-                }}
-                onClick={(e) => e.stopPropagation()}
-            >
-                <GripVertical size={14} className="text-slate-400 group-hover:text-slate-600" />
-            </div>
+            {!readOnly && (
+                <div 
+                    className="w-5 flex items-center justify-center cursor-greedy active:cursor-grabbing hover:bg-black/5 transition-colors shrink-0 border-r border-black/5 z-10"
+                    onMouseDown={(e) => {
+                        e.stopPropagation();
+                        onInitiateDrag(e);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <GripVertical size={14} className="text-slate-400 group-hover:text-slate-600" />
+                </div>
+            )}
 
             {/* Content Area */}
             <div className="flex-1 px-3 flex flex-col justify-center min-w-0">

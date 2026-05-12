@@ -19,6 +19,7 @@ interface RoomColumnProps {
     dragGhostStartTime?: number;
     dragGhostDuration?: number;
     dragGhostIsBlocked?: boolean;
+    readOnly?: boolean;
     children?: React.ReactNode;
 }
 
@@ -40,6 +41,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
     dragGhostStartTime,
     dragGhostDuration,
     dragGhostIsBlocked,
+    readOnly,
     children
 }) => {
     const [isRenaming, setIsRenaming] = useState(false);
@@ -55,7 +57,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (e.button !== 0) return;
+        if (readOnly || e.button !== 0) return;
         const rect = e.currentTarget.getBoundingClientRect();
         const y = e.clientY - rect.top - GRID_GUTTER_TOP;
         const startMins = getSnappedMins(y);
@@ -110,7 +112,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
                 style={{ height: `${GRID_HEADER_HEIGHT}px` }}
             >
                 <div className="flex-1 min-w-0 mr-2">
-                    {isRenaming ? (
+                    {isRenaming && !readOnly ? (
                         <input
                             autoFocus
                             value={newName}
@@ -133,22 +135,28 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
                     )}
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); setShowSettings(!showSettings); }} 
-                        className={`p-1.5 rounded-xl transition-all ${isActive ? 'text-slate-400 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'}`}
-                        title="Room Day Settings"
-                    >
-                        <Settings2 size={16} />
-                    </button>
-                    <button 
-                         onClick={(e) => { e.stopPropagation(); onHideRoom(room.id); }} 
-                         className={`p-1.5 rounded-xl transition-all ${isActive ? 'text-slate-400 hover:text-amber-500 hover:bg-white/10' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'}`}
-                         title="Hide for this Day"
                      >
                          <EyeOff size={16} />
                      </button>
                 </div>
+                {!readOnly && (
+                    <div className="flex items-center gap-1 shrink-0">
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); setShowSettings(!showSettings); }} 
+                            className={`p-1.5 rounded-xl transition-all ${isActive ? 'text-slate-400 hover:text-white hover:bg-white/10' : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'}`}
+                            title="Room Day Settings"
+                        >
+                            <Settings2 size={16} />
+                        </button>
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onHideRoom(room.id); }} 
+                            className={`p-1.5 rounded-xl transition-all ${isActive ? 'text-slate-400 hover:text-amber-500 hover:bg-white/10' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'}`}
+                            title="Hide for this Day"
+                        >
+                            <EyeOff size={16} />
+                        </button>
+                    </div>
+                )}
 
                 {showSettings && (
                     <div className="absolute top-full left-4 right-4 mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 p-4 z-[200] animate-in slide-in-from-top-2" onClick={e => e.stopPropagation()}>

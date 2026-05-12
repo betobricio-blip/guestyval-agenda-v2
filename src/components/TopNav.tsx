@@ -17,6 +17,7 @@ interface TopNavProps {
     onOpenGlobalSettings: () => void;
     activeDayName: string;
     activeSaveName: string | null;
+    isAuthenticated: boolean;
 }
 
 export const TopNav: React.FC<TopNavProps> = ({
@@ -33,7 +34,8 @@ export const TopNav: React.FC<TopNavProps> = ({
     eventName,
     onOpenGlobalSettings,
     activeDayName,
-    activeSaveName
+    activeSaveName,
+    isAuthenticated
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [showActions, setShowActions] = React.useState(false);
@@ -67,15 +69,17 @@ export const TopNav: React.FC<TopNavProps> = ({
                     <h1 className="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors">{eventName} - Agenda Builder</h1>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
-                    <button
-                        onClick={onSave}
-                        className="px-3 py-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all flex items-center gap-1.5 text-sm"
-                        title={activeSaveName ? `Save (${activeSaveName})` : "Save Configuration"}
-                    >
-                        <Save size={16} />
-                        {activeSaveName ? <span className="font-semibold">{activeSaveName}</span> : null}
-                    </button>
-                    {activeSaveName && (
+                    {isAuthenticated && (
+                        <button
+                            onClick={onSave}
+                            className="px-3 py-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all flex items-center gap-1.5 text-sm"
+                            title={activeSaveName ? `Save (${activeSaveName})` : "Save Configuration"}
+                        >
+                            <Save size={16} />
+                            {activeSaveName ? <span className="font-semibold">{activeSaveName}</span> : null}
+                        </button>
+                    )}
+                    {activeSaveName && isAuthenticated && (
                         <button
                             onClick={onSaveAs}
                             className="px-2 py-0.5 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-all text-[9px] font-medium border border-white/20 uppercase tracking-wider h-6"
@@ -84,14 +88,18 @@ export const TopNav: React.FC<TopNavProps> = ({
                             Save As
                         </button>
                     )}
-                    <div className="w-px h-6 bg-white/20 mx-1"></div>
-                    <button
-                        onClick={onOpen}
-                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all"
-                        title="Open Saved"
-                    >
-                        <FolderOpen size={18} />
-                    </button>
+                    {isAuthenticated && (
+                        <>
+                            <div className="w-px h-6 bg-white/20 mx-1"></div>
+                            <button
+                                onClick={onOpen}
+                                className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+                                title="Open Saved"
+                            >
+                                <FolderOpen size={18} />
+                            </button>
+                        </>
+                    )}
                 </div>
                 <div className="flex bg-white/10 p-1 rounded-lg ml-2">
                     {(['Day 1', 'Day 2', 'Split'] as ViewMode[]).map((mode) => (
@@ -128,16 +136,20 @@ export const TopNav: React.FC<TopNavProps> = ({
                             <button onClick={() => { onPrint(); setShowActions(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all">
                                 <Printer size={16} /> Print Agenda
                             </button>
-                            <button onClick={() => { onExport(); setShowActions(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                             <button onClick={() => { onExport(); setShowActions(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all">
                                 <DownloadCloud size={16} /> Export JSON
                             </button>
-                            <button onClick={() => { handleImportClick(); setShowActions(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                                <UploadCloud size={16} /> Import JSON
-                            </button>
-                            <div className="h-px bg-white/5 my-2"></div>
-                            <button onClick={() => { onOpenGlobalSettings(); setShowActions(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-amber-400 hover:text-amber-300 hover:bg-amber-400/5 rounded-xl transition-all">
-                                <Settings size={16} /> Project Settings
-                            </button>
+                            {isAuthenticated && (
+                                <>
+                                    <button onClick={() => { handleImportClick(); setShowActions(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                                        <UploadCloud size={16} /> Import JSON
+                                    </button>
+                                    <div className="h-px bg-white/5 my-2"></div>
+                                    <button onClick={() => { onOpenGlobalSettings(); setShowActions(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-amber-400 hover:text-amber-300 hover:bg-amber-400/5 rounded-xl transition-all">
+                                        <Settings size={16} /> Project Settings
+                                    </button>
+                                </>
+                            )}
                             <input
                                 ref={fileInputRef}
                                 type="file"
