@@ -178,9 +178,15 @@ function App() {
   } | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const savedLocal = localStorage.getItem(STORAGE_KEY);
+    const savedConfigs = localStorage.getItem('guestyval_saved');
+    
     try {
-        const config = saved ? JSON.parse(saved) : initialData;
+        const config = savedLocal ? JSON.parse(savedLocal) : (initialData.current || initialData);
+        if (!savedConfigs && initialData.saved) {
+            localStorage.setItem('guestyval_saved', JSON.stringify(initialData.saved));
+        }
+        
         let finalRooms: Room[] = [];
         
         // MIGRATION: Record<string, Room[]> -> Room[]

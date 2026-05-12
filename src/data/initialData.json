@@ -1,65 +1,238 @@
 {
-  "rooms": [
-    {
-      "id": "r1",
-      "name": "Main Stage",
-      "daySettings": {
-        "day-1": {
-          "capacity": 100,
-          "setupType": "Theater",
-          "isHidden": false
-        },
-        "day-2": {
-          "capacity": 100,
-          "setupType": "Theater",
-          "isHidden": false
+  "current": {
+    "rooms": [
+      {
+        "id": "r1",
+        "name": "Main Stage",
+        "daySettings": {
+          "day-1": {
+            "capacity": 100,
+            "setupType": "Theater",
+            "isHidden": false
+          },
+          "day-2": {
+            "capacity": 100,
+            "setupType": "Theater",
+            "isHidden": false
+          }
+        }
+      },
+      {
+        "id": "r2",
+        "name": "Masterclasses",
+        "daySettings": {
+          "day-1": {
+            "capacity": 100,
+            "setupType": "Theater",
+            "isHidden": false
+          },
+          "day-2": {
+            "capacity": 100,
+            "setupType": "Theater",
+            "isHidden": false
+          }
+        }
+      },
+      {
+        "id": "r3",
+        "name": "Workshops",
+        "daySettings": {
+          "day-1": {
+            "capacity": 100,
+            "setupType": "Theater",
+            "isHidden": false
+          },
+          "day-2": {
+            "capacity": 100,
+            "setupType": "Theater",
+            "isHidden": false
+          }
         }
       }
-    },
-    {
-      "id": "r2",
-      "name": "Masterclasses",
-      "daySettings": {
-        "day-1": {
-          "capacity": 100,
-          "setupType": "Theater",
-          "isHidden": false
-        },
-        "day-2": {
-          "capacity": 100,
-          "setupType": "Theater",
-          "isHidden": false
-        }
+    ],
+    "sessions": [
+      {
+        "id": "s7iwo7kb",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "New Session",
+        "description": "",
+        "startTime": 20,
+        "duration": 150,
+        "color": "#D1E2D3",
+        "type": "Other",
+        "speakers": []
+      }
+    ],
+    "daySettings": {
+      "day-1": {
+        "startHour": 8,
+        "endHour": 18
+      },
+      "day-2": {
+        "startHour": 8,
+        "endHour": 18
       }
     },
-    {
-      "id": "r3",
-      "name": "Workshops",
-      "daySettings": {
-        "day-1": {
-          "capacity": 100,
-          "setupType": "Theater",
-          "isHidden": false
-        },
-        "day-2": {
-          "capacity": 100,
-          "setupType": "Theater",
-          "isHidden": false
-        }
-      }
-    }
-  ],
-  "sessions": [],
-  "daySettings": {
-    "day-1": {
-      "startHour": 8,
-      "endHour": 18
-    },
-    "day-2": {
-      "startHour": 8,
-      "endHour": 18
-    }
+    "viewMode": "Day 1",
+    "eventName": "GuestyVal 2026"
   },
-  "viewMode": "Day 1",
-  "eventName": "GuestyVal 2026"
+  "saved": [
+    {
+      "rooms": [
+        {
+          "id": "r1",
+          "name": "Main Stage",
+          "daySettings": {
+            "day-1": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            },
+            "day-2": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            }
+          }
+        },
+        {
+          "id": "r2",
+          "name": "Masterclasses",
+          "daySettings": {
+            "day-1": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            },
+            "day-2": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            }
+          }
+        },
+        {
+          "id": "r3",
+          "name": "Workshops",
+          "daySettings": {
+            "day-1": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            },
+            "day-2": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            }
+          }
+        }
+      ],
+      "sessions": [
+        {
+          "id": "sfsh0n3a",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "New Session",
+          "description": "",
+          "startTime": 20,
+          "duration": 20,
+          "color": "#D1E2D3",
+          "type": "Other",
+          "speakers": []
+        }
+      ],
+      "daySettings": {
+        "day-1": {
+          "startHour": 8,
+          "endHour": 18
+        },
+        "day-2": {
+          "startHour": 8,
+          "endHour": 18
+        }
+      },
+      "name": "teste",
+      "timestamp": 1778614462081
+    },
+    {
+      "rooms": [
+        {
+          "id": "r1",
+          "name": "Main Stage",
+          "daySettings": {
+            "day-1": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            },
+            "day-2": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            }
+          }
+        },
+        {
+          "id": "r2",
+          "name": "Masterclasses",
+          "daySettings": {
+            "day-1": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            },
+            "day-2": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            }
+          }
+        },
+        {
+          "id": "r3",
+          "name": "Workshops",
+          "daySettings": {
+            "day-1": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            },
+            "day-2": {
+              "capacity": 100,
+              "setupType": "Theater",
+              "isHidden": false
+            }
+          }
+        }
+      ],
+      "sessions": [
+        {
+          "id": "s7iwo7kb",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "New Session",
+          "description": "",
+          "startTime": 20,
+          "duration": 150,
+          "color": "#D1E2D3",
+          "type": "Other",
+          "speakers": []
+        }
+      ],
+      "daySettings": {
+        "day-1": {
+          "startHour": 8,
+          "endHour": 18
+        },
+        "day-2": {
+          "startHour": 8,
+          "endHour": 18
+        }
+      },
+      "name": "GV 2026",
+      "timestamp": 1778616087843
+    }
+  ]
 }
