@@ -135,10 +135,6 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
                     )}
                 </div>
 
-                     >
-                         <EyeOff size={16} />
-                     </button>
-                </div>
                 {!readOnly && (
                     <div className="flex items-center gap-1 shrink-0">
                         <button 
