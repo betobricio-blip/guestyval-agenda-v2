@@ -75,8 +75,8 @@ export const DescriptiveListPreview: React.FC<DescriptiveListPreviewProps> = ({
 
                         <div className="divide-y divide-slate-100">
                             {roomSessions.map((session) => {
-                                const host = session.speakers?.find(s => s.isModerator);
-                                const panelists = session.speakers?.filter(s => !s.isModerator);
+                                // const host = session.speakers?.find(s => s.isModerator);
+                                // const panelists = session.speakers?.filter(s => !s.isModerator);
 
                                 return (
                                     <div key={session.id} className="p-10 hover:bg-slate-50/30 transition-colors">

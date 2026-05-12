@@ -22,7 +22,7 @@ interface TopNavProps {
 export const TopNav: React.FC<TopNavProps> = ({
     viewMode,
     setViewMode,
-    onAddSession,
+    // onAddSession,
     onSave,
     onSaveAs,
     onOpen,

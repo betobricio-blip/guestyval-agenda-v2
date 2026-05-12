@@ -309,7 +309,7 @@ function App() {
       const currentStartHour = daySettings[dayId].startHour;
       if (updates.startHour > currentStartHour) {
         const daySessions = sessions.filter(s => s.dayId === dayId);
-        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime) < (updates.startHour * 60));
+        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime) < (updates.startHour! * 60));
         if (hasConflicts) {
           toast.error(`Cannot adjust grid: A session currently exists which falls outside the new boundaries. Please move or delete the session first.`);
           return;
@@ -321,7 +321,7 @@ function App() {
       if (updates.endHour < currentEndHour) {
         const currentStartHour = daySettings[dayId].startHour;
         const daySessions = sessions.filter(s => s.dayId === dayId);
-        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime + s.duration) > (updates.endHour * 60));
+        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime + s.duration) > (updates.endHour! * 60));
         if (hasConflicts) {
           toast.error(`Cannot adjust grid: A session currently exists which falls outside the new boundaries. Please move or delete the session first.`);
           return;
@@ -331,7 +331,7 @@ function App() {
     setDaySettings(prev => ({ ...prev, [dayId]: { ...prev[dayId], ...updates } }));
   };
 
-  const handleAddRoom = (dayId: string) => {
+  const handleAddRoom = () => {
     const name = window.prompt("Enter new Room Name:", "Workshop Room");
     if (!name) return;
 
@@ -563,7 +563,7 @@ function App() {
                     )}
                 </div>
                 <button 
-                    onClick={() => handleAddRoom(dayId)}
+                    onClick={() => handleAddRoom()}
                     className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 group-hover:text-emerald-600 group-hover:border-emerald-200 group-hover:bg-white transition-all flex items-center justify-center shadow-sm active:scale-90"
                     title="Add New Room Column"
                 >

@@ -4,7 +4,7 @@ import {
     X, Trash2, ChevronDown, Plus, User, Mic, ChevronUp, 
     ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench, Sparkles, MoveUp, MoveDown 
 } from 'lucide-react';
-import { PIXELS_PER_MINUTE, minutesToTime, MODERN_PALETTE } from '../constants';
+import { MODERN_PALETTE } from '../constants';
 import { getContrastText } from '../utils';
 
 const COLORS = MODERN_PALETTE.map(p => p.bg);

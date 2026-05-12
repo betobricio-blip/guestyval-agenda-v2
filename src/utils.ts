@@ -1,5 +1,5 @@
 import type { Session } from './types';
-import { START_HOUR, TOTAL_MINUTES, MIN_SESSION_DURATION, DEFAULT_SESSION_DURATION, MODERN_PALETTE } from './constants';
+import { MIN_SESSION_DURATION, DEFAULT_SESSION_DURATION, MODERN_PALETTE } from './constants';
 
 export const findFirstAvailableSlot = (
     roomId: string,

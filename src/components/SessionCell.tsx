@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GripVertical, Mic, User, Star } from 'lucide-react';
+import { GripVertical, User, Star } from 'lucide-react';
 import { getContrastText } from '../utils';
 import { PIXELS_PER_MINUTE, minutesToTime, GRID_GUTTER_TOP } from '../constants';
 import type { Session } from '../types';
