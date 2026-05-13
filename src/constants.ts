@@ -15,6 +15,8 @@ export const MODERN_PALETTE = [
     { bg: '#B2E4E3', text: '#1D4444', name: 'Teal' },
     { bg: '#EEFAD0', text: '#4B522D', name: 'Lime' },
     { bg: '#FE8673', text: '#FFFFFF', name: 'Coral' },
+    { bg: '#E9E2D5', text: '#2A3B52', name: 'Stone' },
+    { bg: '#9EBCFF', text: '#1D4444', name: 'Azure' },
 ];
 
 export const timeToMinutes = (timeStr: string, startHour: number = START_HOUR): number => {

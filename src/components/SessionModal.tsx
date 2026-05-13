@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Session, Speaker } from '../types';
 import { 
     X, Trash2, ChevronDown, Plus, User, Mic, ChevronUp, 
-    ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench, Sparkles, MoveUp, MoveDown 
+    ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench, MoveUp, MoveDown 
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { MODERN_PALETTE, minutesToTime, timeToMinutes } from '../constants';
@@ -11,12 +11,13 @@ import { getContrastText } from '../utils';
 const COLORS = MODERN_PALETTE.map(p => p.bg);
 
 const PRESETS: Record<string, { icon: any, color: string, label: string }> = {
-  'Keynote': { icon: Mic, color: '#D9D7E8', label: 'Keynote' },      // Lavender
-  'Panel': { icon: Users, color: '#D0D7E1', label: 'Panel' },        // Slate
-  'Break': { icon: Coffee, color: '#E8DFD0', label: 'Break' },      // Sand
-  'Workshop': { icon: Wrench, color: '#D1E2D3', label: 'Workshop' }, // Sage
-  'Highlight': { icon: Sparkles, color: '#EAD5D5', label: 'Event' }, // Dusty Rose
-  'Other': { icon: User, color: '#CCE2E2', label: 'Session' }        // Eucalyptus
+  'Keynote': { icon: Mic, color: '#D9D7E8', label: 'Keynote' },
+  'Panel': { icon: Users, color: '#D0D7E1', label: 'Panel' },
+  'Break': { icon: Coffee, color: '#E8DFD0', label: 'Break' },
+  'Workshop': { icon: Wrench, color: '#D1E2D3', label: 'Workshop' },
+  'TPM Roundtables': { icon: Users, color: '#CCE2E2', label: 'Roundtable' },
+  'Tech Talks': { icon: Star, color: '#E9E2D5', label: 'Tech Talk' },
+  'Other': { icon: User, color: '#CCE2E2', label: 'Session' }
 };
 
 interface SessionModalProps {
