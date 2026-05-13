@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GripVertical, User, Star } from 'lucide-react';
 import { getContrastText } from '../utils';
-import { PIXELS_PER_MINUTE, minutesToTime, GRID_GUTTER_TOP } from '../constants';
+import { PIXELS_PER_MINUTE, minutesToTime } from '../constants';
 import type { Session } from '../types';
 
 interface SessionCellProps {
@@ -55,7 +55,6 @@ export const SessionCell: React.FC<SessionCellProps> = ({
         color: textColor
     };
 
-    const gridEndMins = (startHour + (endHour - startHour)) * 60; // Total day end in absolute mins
     const currentEndMins = startTime + duration;
     const isNearBottom = (currentEndMins - (startHour * 60)) > ((endHour - startHour) * 60 * 0.5); // Bottom 50%
 

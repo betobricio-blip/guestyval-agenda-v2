@@ -10,7 +10,7 @@ import { LoginOverlay } from './components/LoginOverlay'
 import { ExporterView } from './components/ExporterView'
 import type { Day, Room, Session, ViewMode, RoomDaySettings } from './types'
 import { findFirstAvailableSlot, isColliding } from './utils'
-import { PIXELS_PER_MINUTE, MIN_SESSION_DURATION, GRID_HEADER_HEIGHT, MODERN_PALETTE } from './constants'
+import { PIXELS_PER_MINUTE, GRID_HEADER_HEIGHT, MIN_SESSION_DURATION, MODERN_PALETTE } from './constants'
 import initialData from './data/initialData.json'
 import { Settings, Plus, X, Eye, EyeOff, Layout, Lock } from 'lucide-react'
 
@@ -327,7 +327,7 @@ function App() {
         ).length;
 
         if (oobCount > 0) {
-            toast.warning(`${oobCount} session(s) are now outside the visible grid. Please adjust boundaries or move sessions.`);
+            toast(`${oobCount} session(s) are now outside the visible grid. Please adjust boundaries or move sessions.`, { icon: '⚠️' });
         } else {
             toast.success('Grid boundaries updated');
         }

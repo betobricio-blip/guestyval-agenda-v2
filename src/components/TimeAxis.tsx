@@ -1,5 +1,5 @@
 import React from 'react';
-import { PIXELS_PER_MINUTE, GRID_HEADER_HEIGHT, GRID_GUTTER_TOP } from '../constants';
+import { PIXELS_PER_MINUTE } from '../constants';
 
 interface TimeAxisProps {
     startHour: number;

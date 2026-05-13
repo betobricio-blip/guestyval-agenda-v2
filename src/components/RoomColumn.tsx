@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Settings2, EyeOff, Users, Layout } from 'lucide-react';
 import type { Room, Session, RoomDaySettings } from '../types';
-import { PIXELS_PER_MINUTE, minutesToTime, GRID_HEADER_HEIGHT, GRID_GUTTER_TOP } from '../constants';
+import { PIXELS_PER_MINUTE, minutesToTime, GRID_HEADER_HEIGHT } from '../constants';
 
 interface RoomColumnProps {
     room: Room;
