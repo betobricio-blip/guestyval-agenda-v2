@@ -310,6 +310,13 @@ function App() {
     toast.success('Room renamed globally');
   };
 
+  const handleResetToDefaults = () => {
+    if (window.confirm("This will erase your current local changes and reset the agenda to the event's default. Continue?")) {
+      localStorage.removeItem(STORAGE_KEY);
+      window.location.reload();
+    }
+  };
+
   const handleUpdateDaySettings = (dayId: string, updates: Partial<DaySettings>) => {
     if (!isAuthenticated) return;
     
@@ -798,10 +805,23 @@ function App() {
               >
                 Close & Save
               </button>
+                  <div className="pt-6 mt-6 border-t border-slate-100">
+                    <button 
+                      onClick={handleResetToDefaults}
+                      className="w-full py-3 px-4 bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl border border-slate-100 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+                    >
+                      <Trash2 size={14} />
+                      Reset to Default Agenda
+                    </button>
+                    <p className="text-[9px] text-slate-400 text-center mt-3 font-medium px-4">
+                      Use this if you want to discard your local edits and sync with the latest official event updates.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {showLogin && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
