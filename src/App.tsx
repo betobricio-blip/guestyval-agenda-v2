@@ -113,7 +113,7 @@ const ManageRoomsPopover = ({
       </div>
       <div className="max-h-[300px] overflow-y-auto p-2 space-y-1">
         {rooms.map(room => {
-          const isHidden = room.daySettings[dayId]?.isHidden;
+          const isHidden = (room.daySettings && room.daySettings[dayId]) ? room.daySettings[dayId].isHidden : false;
           return (
             <div key={room.id} className="flex items-center justify-between px-3 py-2 hover:bg-slate-50 rounded-xl transition-colors group">
               <span className={`text-xs font-bold truncate pr-4 ${isHidden ? 'text-slate-300 line-through' : 'text-slate-700'}`}>
@@ -311,30 +311,29 @@ function App() {
   };
 
   const handleUpdateDaySettings = (dayId: string, updates: Partial<DaySettings>) => {
-    if (updates.startHour !== undefined) {
-      const currentStartHour = daySettings[dayId].startHour;
-      if (updates.startHour > currentStartHour) {
-        const daySessions = sessions.filter(s => s.dayId === dayId);
-        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime) < (updates.startHour! * 60));
-        if (hasConflicts) {
-          toast.error(`Cannot adjust grid: A session currently exists which falls outside the new boundaries. Please move or delete the session first.`);
-          return;
+    if (!isAuthenticated) return;
+    
+    setDaySettings(prev => {
+        const current = prev[dayId];
+        const next = { ...current, ...updates };
+        
+        const gridStartMins = (next.startHour - 8) * 60;
+        const gridEndMins = (next.endHour - 8) * 60;
+
+        // Check for sessions that will fall outside the new boundaries
+        const oobCount = sessions.filter(s => 
+            s.dayId === dayId && 
+            (s.startTime < gridStartMins || (s.startTime + s.duration) > gridEndMins)
+        ).length;
+
+        if (oobCount > 0) {
+            toast.warning(`${oobCount} session(s) are now outside the visible grid. Please adjust boundaries or move sessions.`);
+        } else {
+            toast.success('Grid boundaries updated');
         }
-      }
-    }
-    if (updates.endHour !== undefined) {
-      const currentEndHour = daySettings[dayId].endHour;
-      if (updates.endHour < currentEndHour) {
-        const currentStartHour = daySettings[dayId].startHour;
-        const daySessions = sessions.filter(s => s.dayId === dayId);
-        const hasConflicts = daySessions.some(s => (currentStartHour * 60 + s.startTime + s.duration) > (updates.endHour! * 60));
-        if (hasConflicts) {
-          toast.error(`Cannot adjust grid: A session currently exists which falls outside the new boundaries. Please move or delete the session first.`);
-          return;
-        }
-      }
-    }
-    setDaySettings(prev => ({ ...prev, [dayId]: { ...prev[dayId], ...updates } }));
+
+        return { ...prev, [dayId]: next };
+    });
   };
 
   const handleAddRoom = () => {
@@ -389,6 +388,7 @@ function App() {
           toast.error("Blocked by collision");
           return s;
       }
+      setEditingSession(current => (current && s.id === current.id) ? updated : current);
       return updated;
     }));
   };
@@ -415,7 +415,7 @@ function App() {
     if (!session) return;
     setDragState({
       sessionId,
-      initialMouseY: mouseEvent.clientY,
+      initialMouseY: mouseEvent.clientY, // We'll keep this for the initial global ref if needed, but we'll use delta mins
       initialStartTime: session.startTime,
       initialRoomId: session.roomId,
       initialDayId: session.dayId,
@@ -437,8 +437,11 @@ function App() {
     
     let newStartTime = dragState.initialStartTime + deltaMins;
     const settings = daySettings[dayId];
-    const maxVisibleMins = (settings.endHour - settings.startHour) * 60;
-    newStartTime = Math.max(0, Math.min(maxVisibleMins - session.duration, newStartTime));
+    
+    // Boundary check in absolute mins (base 8)
+    const gridStartMins = (settings.startHour - 8) * 60;
+    const gridEndMins = (settings.endHour - 8) * 60;
+    newStartTime = Math.max(gridStartMins, Math.min(gridEndMins - session.duration, newStartTime));
 
     const overlaps = isColliding(newStartTime, session.duration, roomId, dayId, sessions, session.id);
     
@@ -489,14 +492,23 @@ function App() {
   }, [dragState, handleDragRelease]);
 
   const renderDayLayout = (dayId: string) => {
-    const visibleRooms = rooms.filter(r => !r.daySettings[dayId]?.isHidden);
-    const settings = daySettings[dayId];
+    // Defensive filtering to prevent white-screen on malformed data
+    const safeRooms = Array.isArray(rooms) ? rooms : [];
+    const visibleRooms = safeRooms.filter(r => {
+      if (!r || typeof r !== 'object') return false;
+      if (!r.daySettings || typeof r.daySettings !== 'object') return true; 
+      return !r.daySettings[dayId]?.isHidden;
+    });
+    const settings = (daySettings && daySettings[dayId]) || { startHour: START_HOUR, endHour: END_HOUR };
     return (
-      <div className="flex flex-1 overflow-x-auto overflow-y-auto relative print:overflow-visible print:w-full print:block bg-white pb-32 no-scrollbar">
+      <div 
+        className="flex flex-1 overflow-x-auto overflow-y-auto relative print:overflow-visible print:w-full print:block bg-white pb-64 no-scrollbar"
+      >
         {/* Sticky Sidebar (Settings + Time Axis) */}
-        <div className="sticky left-0 top-0 z-[110] flex flex-col shrink-0 no-print border-r bg-slate-50 border-slate-200 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
-            {/* Settings Gear - Absolute so it doesn't push the axis coordinate system */}
-            <div className="absolute top-0 left-0 w-full flex items-center justify-center bg-white border-b border-slate-200 z-[120]" style={{ height: `${GRID_HEADER_HEIGHT}px` }}>
+        <div className="sticky left-0 z-[500] flex flex-col shrink-0 no-print border-r bg-slate-50 border-slate-200 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
+            {/* Settings Gear - Sticky at top of the axis column */}
+            {/* Settings Gear - Header area */}
+            <div className="w-full flex items-center justify-center bg-white border-b border-slate-200 z-[120] shrink-0" style={{ height: `${GRID_HEADER_HEIGHT}px` }}>
                 <button 
                     onClick={() => setShowSettings(showSettings === dayId ? null : dayId)} 
                     className="h-9 w-9 flex items-center justify-center bg-slate-50 rounded-xl border border-slate-200 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 hover:border-emerald-200 transition-all active:scale-95 shadow-sm"
@@ -544,10 +556,12 @@ function App() {
                   onClick={() => !dragState && isAuthenticated && setEditingSession(s)} 
                   onInitiateDrag={(e) => isAuthenticated && initiateDrag(s.id, e)}
                   startHour={settings.startHour} 
+                  endHour={settings.endHour}
                   isDimmed={dragState?.sessionId === s.id}
                   suppressHover={!!editingSession || !!persistenceMode || showExporter || showGlobalSettings}
                   tooltipPosition={roomIdx === visibleRooms.length - 1 ? 'left' : 'right'}
                   readOnly={!isAuthenticated}
+                  dragStartTime={dragState?.sessionId === s.id ? dragGhost?.startTime : null}
                 />
             ))}
           </RoomColumn>
@@ -588,7 +602,7 @@ function App() {
   };
 
   const handleSaveApp = (name: string) => {
-      const state = { rooms, sessions, daySettings, name, timestamp: Date.now() };
+      const state = { rooms, sessions, daySettings, eventName, name, timestamp: Date.now() };
       const saved = JSON.parse(localStorage.getItem('guestyval_saved') || '[]');
       const updated = [...saved.filter((s:any) => s.name !== name), state];
       localStorage.setItem('guestyval_saved', JSON.stringify(updated));
@@ -705,7 +719,52 @@ function App() {
           endHour={daySettings[editingSession.dayId]?.endHour || END_HOUR} 
         />
       )}
-      {persistenceMode && <PersistenceModal mode={persistenceMode} onClose={() => setPersistenceMode(null)} onSave={handleSaveApp} onSelect={c => { setRooms(c.rooms); setSessions(c.sessions); setDaySettings(c.daySettings); setActiveSaveName(c.name); if(c.eventName) setEventName(c.eventName); setPersistenceMode(null);}} />}
+      {persistenceMode && (
+        <PersistenceModal 
+          mode={persistenceMode} 
+          onClose={() => setPersistenceMode(null)} 
+          onSave={handleSaveApp} 
+          onSelect={c => { 
+            if (c && typeof c === 'object') {
+              if (Array.isArray(c.rooms)) {
+                const repairedRooms = c.rooms.map((r: any) => {
+                  if (!r || typeof r !== 'object') return null;
+                  return {
+                    ...r,
+                    daySettings: (r.daySettings && typeof r.daySettings === 'object' && !Array.isArray(r.daySettings)) 
+                      ? r.daySettings 
+                      : { 
+                        'day-1': INITIAL_DAY_SETTINGS(false), 
+                        'day-2': INITIAL_DAY_SETTINGS(false) 
+                      }
+                  };
+                }).filter(Boolean);
+                setRooms(repairedRooms); 
+              }
+              
+              if (Array.isArray(c.sessions)) {
+                setSessions(c.sessions); 
+              }
+              
+              if (c.daySettings && typeof c.daySettings === 'object' && !Array.isArray(c.daySettings)) {
+                  const repairedSettings: Record<string, DaySettings> = {};
+                  Object.entries(c.daySettings).forEach(([k, v]) => {
+                      if (v && typeof v === 'object') {
+                          const normalizedKey = k.toLowerCase().replace(' ', '-');
+                          repairedSettings[normalizedKey] = v as DaySettings;
+                      }
+                  });
+                  setDaySettings(repairedSettings);
+              }
+              
+              if (c.name) setActiveSaveName(c.name); 
+              if (c.eventName) setEventName(c.eventName); 
+              setPersistenceMode(null);
+              toast.success('Configuration loaded and synchronized');
+            }
+          }} 
+        />
+      )}
       {showExporter && <ExporterView rooms={rooms} sessions={sessions} eventName={eventName} onClose={() => setShowExporter(false)} daySettings={daySettings} />}
       
       {/* Global Settings Modal */}

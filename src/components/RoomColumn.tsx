@@ -20,6 +20,7 @@ interface RoomColumnProps {
     dragGhostDuration?: number;
     dragGhostIsBlocked?: boolean;
     readOnly?: boolean;
+    className?: string;
     children?: React.ReactNode;
 }
 
@@ -42,6 +43,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
     dragGhostDuration,
     dragGhostIsBlocked,
     readOnly,
+    className,
     children
 }) => {
     const [isRenaming, setIsRenaming] = useState(false);
@@ -49,7 +51,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
     const [showSettings, setShowSettings] = useState(false);
     const [drawingState, setDrawingState] = useState<{ startMins: number; currentMins: number } | null>(null);
 
-    const dayConfig = room.daySettings[dayId] || { capacity: 100, setupType: 'Theater', isHidden: false };
+    const dayConfig = (room.daySettings && room.daySettings[dayId]) || { capacity: 100, setupType: 'Theater', isHidden: false };
 
     const getSnappedMins = (y: number) => {
         const mins = y / PIXELS_PER_MINUTE;
@@ -59,11 +61,12 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
     const handleMouseDown = (e: React.MouseEvent) => {
         if (readOnly || e.button !== 0) return;
         const rect = e.currentTarget.getBoundingClientRect();
-        const y = e.clientY - rect.top - GRID_GUTTER_TOP;
+        const y = e.clientY - rect.top;
         const startMins = getSnappedMins(y);
         const maxMins = (endHour - startHour) * 60;
         if (startMins < 0 || startMins >= maxMins) return;
-        const isOccupied = sessions.some(s => s.roomId === room.id && s.dayId === dayId && startMins >= s.startTime && startMins < (s.startTime + s.duration));
+        const absoluteStartMins = startMins + ((startHour - 8) * 60);
+        const isOccupied = sessions.some(s => s.roomId === room.id && s.dayId === dayId && absoluteStartMins >= s.startTime && absoluteStartMins < (s.startTime + s.duration));
         if (isOccupied) return;
         setDrawingState({ startMins, currentMins: startMins });
     };
@@ -72,18 +75,27 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
         if (onDragHover) onDragHover(e.clientY);
         if (!drawingState) return;
         const rect = e.currentTarget.getBoundingClientRect();
-        const y = e.clientY - rect.top - GRID_GUTTER_TOP;
+        const y = e.clientY - rect.top;
         let currentMins = getSnappedMins(y);
-        const roomSessions = sessions.filter(s => s.roomId === room.id && s.dayId === dayId).sort((a, b) => a.startTime - b.startTime);
+        const gridOffsetMins = (startHour - 8) * 60;
+        const roomSessions = sessions
+            .filter(s => s.roomId === room.id && s.dayId === dayId)
+            .sort((a, b) => a.startTime - b.startTime);
+
         if (currentMins > drawingState.startMins) {
-            const nextSession = roomSessions.find(s => s.startTime >= drawingState.startMins);
-            if (nextSession) currentMins = Math.min(currentMins, nextSession.startTime);
+            const nextSession = roomSessions.find(s => s.startTime >= (drawingState.startMins + gridOffsetMins));
+            if (nextSession) {
+                const relativeNextStart = nextSession.startTime - gridOffsetMins;
+                currentMins = Math.min(currentMins, relativeNextStart);
+            }
             const maxMins = (endHour - startHour) * 60;
             currentMins = Math.min(currentMins, maxMins);
         } else if (currentMins < drawingState.startMins) {
-            const prevSessions = roomSessions.filter(s => (s.startTime + s.duration) <= drawingState.startMins);
-            const prevSession = prevSessions[prevSessions.length - 1];
-            if (prevSession) currentMins = Math.max(currentMins, prevSession.startTime + prevSession.duration);
+            const prevSession = [...roomSessions].reverse().find(s => (s.startTime + s.duration) <= (drawingState.startMins + gridOffsetMins));
+            if (prevSession) {
+                const relativePrevEnd = (prevSession.startTime + prevSession.duration) - gridOffsetMins;
+                currentMins = Math.max(currentMins, relativePrevEnd);
+            }
             currentMins = Math.max(currentMins, 0);
         }
         setDrawingState({ ...drawingState, currentMins });
@@ -94,7 +106,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
         const start = Math.min(drawingState.startMins, drawingState.currentMins);
         let duration = Math.abs(drawingState.currentMins - drawingState.startMins);
         if (duration < 5) duration = 15;
-        onDrawComplete(start, duration);
+        onDrawComplete(start + ((startHour - 8) * 60), duration);
         setDrawingState(null);
     };
 
@@ -103,12 +115,12 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
     return (
         <div
             onClick={onActivate}
-            className={`min-w-[280px] flex-1 flex flex-col border-r last:border-r-0 bg-white relative hover:z-[150] transition-all ${isActive ? 'ring-2 ring-emerald-500 ring-inset z-10 shadow-lg' : 'z-0'}`}
-            style={{ minHeight: `${gridHeight + GRID_HEADER_HEIGHT + GRID_GUTTER_TOP}px` }}
+            className={`min-w-[280px] flex-1 flex flex-col border-r last:border-r-0 bg-white relative hover:z-[200] transition-all ${isActive ? 'ring-2 ring-slate-950 ring-inset z-[150]' : 'z-0'} ${className || ''}`}
+            style={{ minHeight: `${gridHeight + GRID_HEADER_HEIGHT}px` }}
         >
             {/* Room Header */}
             <div 
-                className={`flex items-center justify-between px-4 sticky top-0 z-[100] border-b transition-all duration-300 ${isActive ? 'bg-slate-900 border-slate-900 shadow-xl' : 'bg-slate-50 border-slate-200'}`}
+                className={`flex items-center justify-between px-4 sticky top-0 z-[100] border-b transition-all duration-300 ${isActive ? 'bg-slate-950 border-slate-950' : 'bg-slate-50 border-slate-200'}`}
                 style={{ height: `${GRID_HEADER_HEIGHT}px` }}
             >
                 <div className="flex-1 min-w-0 mr-2">
@@ -206,8 +218,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
             <div
                 className="relative time-heartbeat-grid bg-white cursor-crosshair select-none"
                 style={{ 
-                    height: `${gridHeight + GRID_GUTTER_TOP}px`,
-                    backgroundPosition: `0 ${GRID_GUTTER_TOP}px`
+                    height: `${gridHeight}px`
                 }}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -219,7 +230,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
                     <div
                         className="absolute left-0 right-0 bg-emerald-500/10 border-2 border-emerald-500/40 z-30 pointer-events-none flex items-center justify-center"
                         style={{
-                            top: `${Math.min(drawingState.startMins, drawingState.currentMins) * PIXELS_PER_MINUTE + GRID_GUTTER_TOP}px`,
+                            top: `${Math.min(drawingState.startMins, drawingState.currentMins) * PIXELS_PER_MINUTE}px`,
                             height: `${Math.max(15, Math.abs(drawingState.currentMins - drawingState.startMins)) * PIXELS_PER_MINUTE}px`
                         }}
                     >
@@ -233,7 +244,7 @@ export const RoomColumn: React.FC<RoomColumnProps> = ({
                     <div
                         className={`absolute left-1 right-1 border-2 border-dashed z-30 pointer-events-none rounded-sm bg-white/40 ${dragGhostIsBlocked ? 'border-red-500 bg-red-50/30' : 'border-emerald-500 bg-emerald-50/20'}`}
                         style={{
-                            top: `${dragGhostStartTime * PIXELS_PER_MINUTE + GRID_GUTTER_TOP}px`,
+                            top: `${(dragGhostStartTime - ((startHour - 8) * 60)) * PIXELS_PER_MINUTE}px`,
                             height: `${(dragGhostDuration || 30) * PIXELS_PER_MINUTE}px`,
                         }}
                     >

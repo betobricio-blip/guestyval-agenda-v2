@@ -9,10 +9,12 @@ interface SessionCellProps {
     onClick: () => void;
     onInitiateDrag: (e: React.MouseEvent) => void;
     startHour: number;
+    endHour: number;
     isDimmed?: boolean;
     suppressHover?: boolean;
     tooltipPosition?: 'left' | 'right';
     readOnly?: boolean;
+    dragStartTime?: number | null;
 }
 
 export const SessionCell: React.FC<SessionCellProps> = ({ 
@@ -20,20 +22,24 @@ export const SessionCell: React.FC<SessionCellProps> = ({
     onClick, 
     onInitiateDrag, 
     startHour,
+    endHour,
     isDimmed,
     suppressHover,
     tooltipPosition = 'right',
-    readOnly
+    readOnly,
+    dragStartTime
 }) => {
     const { name, description, startTime, duration, color, speakers, type } = session;
+    const firstSpeaker = speakers && speakers.length > 0 ? speakers[0] : null;
     const [isHovered, setIsHovered] = useState(false);
 
     const textColor = getContrastText(color);
     const isLight = textColor === '#1e293b';
 
+    const relativeStartTime = startTime - ((startHour - 8) * 60);
     const sessionStyle: React.CSSProperties = {
         position: 'absolute',
-        top: `${startTime * PIXELS_PER_MINUTE + GRID_GUTTER_TOP}px`,
+        top: `${relativeStartTime * PIXELS_PER_MINUTE}px`,
         height: `${duration * PIXELS_PER_MINUTE}px`,
         left: '4px',
         right: '4px',
@@ -49,9 +55,12 @@ export const SessionCell: React.FC<SessionCellProps> = ({
         color: textColor
     };
 
-    const firstSpeaker = speakers && speakers[0];
+    const gridEndMins = (startHour + (endHour - startHour)) * 60; // Total day end in absolute mins
+    const currentEndMins = startTime + duration;
+    const isNearBottom = (currentEndMins - (startHour * 60)) > ((endHour - startHour) * 60 * 0.5); // Bottom 50%
 
-    const tooltipClasses = `absolute top-0 w-[280px] bg-white text-slate-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 p-4 z-[9999] animate-in slide-in-from-top-1 fade-in duration-200 pointer-events-none 
+    const tooltipClasses = `absolute w-[280px] bg-white text-slate-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 p-4 z-[9999] animate-in slide-in-from-top-1 fade-in duration-200 pointer-events-none 
+    ${isNearBottom ? 'bottom-0' : 'top-0'}
     ${tooltipPosition === 'right' ? 'left-full ml-3' : 'right-full mr-3'}`;
 
     return (
@@ -83,17 +92,17 @@ export const SessionCell: React.FC<SessionCellProps> = ({
 
             {/* Content Area */}
             <div className="flex-1 px-3 flex flex-col justify-center min-w-0">
-                <div className="flex items-center gap-1.5 overflow-hidden text-[11px] font-extrabold whitespace-nowrap leading-none" style={{ color: textColor }}>
+                <div className="flex items-center gap-1.5 overflow-hidden text-[11px] font-extrabold whitespace-nowrap leading-tight" style={{ color: textColor }}>
                     <span className="truncate min-w-0">{name}</span>
                     <span className="opacity-30 shrink-0 font-normal">|</span>
                     <span className="shrink-0 font-bold opacity-80">
-                        {minutesToTime(startTime, startHour)} ({duration}m)
+                        {minutesToTime(startTime, 8)} ({duration}m)
                     </span>
                 </div>
                 
                 {/* Speaker Display (>45m) */}
                 {duration > 45 && firstSpeaker && (
-                    <div className="text-[9px] font-bold truncate mt-1 flex items-center gap-1.5 leading-none opacity-80" style={{ color: textColor }}>
+                    <div className="text-[9px] font-bold truncate mt-1 flex items-center gap-1.5 leading-tight opacity-80" style={{ color: textColor }}>
                         {firstSpeaker.isModerator ? <Star size={8} fill="currentColor" /> : <User size={8} />}
                         <span className="truncate">{firstSpeaker.name} {firstSpeaker.company ? `(${firstSpeaker.company})` : ''}</span>
                     </div>
@@ -101,8 +110,8 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             </div>
 
             {/* Speaker Info Popover (Hover Tooltip) */}
-            {isHovered && !isDimmed && !suppressHover && (
-                <div className={tooltipClasses} style={{ zIndex: 50 }}>
+            {isHovered && !suppressHover && (
+                <div className={tooltipClasses} style={{ zIndex: 3000 }}>
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col border-b border-slate-100 pb-2">
                             <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest leading-tight">{type || 'Session'}</span>
@@ -137,7 +146,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
                         )}
                         
                         <div className="mt-1 pt-2 border-t border-slate-50 flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-                            <span>{minutesToTime(startTime, startHour)} - {minutesToTime(startTime + duration, startHour)}</span>
+                            <span>{minutesToTime(dragStartTime ?? startTime, 8)} - {minutesToTime((dragStartTime ?? startTime) + duration, 8)}</span>
                             <span>{duration} minutes</span>
                         </div>
                     </div>

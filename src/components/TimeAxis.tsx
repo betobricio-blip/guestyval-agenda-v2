@@ -8,26 +8,32 @@ interface TimeAxisProps {
 
 export const TimeAxis: React.FC<TimeAxisProps> = ({ startHour, endHour }) => {
     const times = [];
-    for (let h = startHour; h < endHour; h++) {
-        times.push(`${h.toString().padStart(2, '0')}:00`);
-        times.push(`${h.toString().padStart(2, '0')}:30`);
+    const startMins = startHour * 60;
+    const endMins = endHour * 60;
+    
+    for (let m = startMins; m <= endMins; m += 30) {
+        const hh = Math.floor(m / 60);
+        const mm = Math.floor(m % 60);
+        times.push(`${hh.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}`);
     }
-    times.push(`${endHour.toString().padStart(2, '0')}:00`);
 
     return (
         <div className="w-16 border-r bg-slate-50 relative no-print shrink-0" 
-             style={{ height: `${(endHour - startHour) * 60 * PIXELS_PER_MINUTE + GRID_HEADER_HEIGHT + GRID_GUTTER_TOP}px` }}>
+             style={{ height: `${(endHour - startHour) * 60 * PIXELS_PER_MINUTE}px` }}>
             {times.map((time) => {
                 const [h, m] = time.split(':').map(Number);
                 const offsetMinutes = (h - startHour) * 60 + m;
-                const top = (offsetMinutes * PIXELS_PER_MINUTE) + GRID_HEADER_HEIGHT + GRID_GUTTER_TOP;
+                const top = offsetMinutes * PIXELS_PER_MINUTE;
+                
                 return (
                     <div
                         key={time}
-                        className="absolute w-full h-0 flex items-center justify-center text-[10px] font-black text-slate-300 uppercase tracking-[0.1em]"
-                        style={{ top: `${top}px` }}
+                        className="absolute w-full h-0 overflow-visible flex items-end justify-center text-[10px] font-black text-slate-300 uppercase tracking-[0.1em] pointer-events-none"
+                        style={{ 
+                            top: `${top}px`
+                        }}
                     >
-                        <span className="bg-slate-50 px-1 z-10 leading-none">{time}</span>
+                        <span className="bg-slate-50 px-1 z-10 leading-none mb-[-1px]">{time}</span>
                     </div>
                 );
             })}

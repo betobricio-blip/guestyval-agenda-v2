@@ -58,7 +58,7 @@ export const DescriptiveListPreview: React.FC<DescriptiveListPreviewProps> = ({
 
             <div className="p-0">
                 {roomGroups.map(({ room, sessions: roomSessions }) => {
-                    const roomDayConfig = room.daySettings[dayId];
+                    const roomDayConfig = room.daySettings ? room.daySettings[dayId] : null;
                     return (
                         <div key={room.id} className="mb-0">
                             {/* Room Header with Day-Specific Settings */}

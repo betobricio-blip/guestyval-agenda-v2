@@ -6,7 +6,7 @@
         "name": "Main Stage",
         "daySettings": {
           "day-1": {
-            "capacity": 100,
+            "capacity": 700,
             "setupType": "Theater",
             "isHidden": false
           },
@@ -22,8 +22,8 @@
         "name": "Masterclasses",
         "daySettings": {
           "day-1": {
-            "capacity": 100,
-            "setupType": "Theater",
+            "capacity": 300,
+            "setupType": "Roundtable",
             "isHidden": false
           },
           "day-2": {
@@ -52,22 +52,571 @@
     ],
     "sessions": [
       {
-        "id": "s7iwo7kb",
+        "id": "srx6e26o",
         "roomId": "r1",
+        "dayId": "day-1",
+        "name": "Registration & Breakfast",
+        "description": "",
+        "startTime": 60,
+        "duration": 60,
+        "color": "#EEFAD0",
+        "type": "Break",
+        "speakers": []
+      },
+      {
+        "id": "skuwvb8e",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Fireside Chat] Unlocking the greater power of data",
+        "description": "With the AI tools that exist today for operators, the potential to shift your data into applied practices and insights can be transformational.  data collection to the active application of information . This session will cover the foundational requirement of data integrity and the methods for transforming raw datasets into actionable insights for informed decision-making. We will cover how updated data programs serve as engines for business growth and optimization and explore the latest capabilities and tools available to professionalize data management, moving beyond basic reporting toward a model of data-driven operational excellence. ",
+        "startTime": 235,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Panel",
+        "speakers": [
+          {
+            "id": "8j23zp",
+            "name": "EnsoConnect (Gold)",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          },
+          {
+            "id": "1srnt",
+            "name": "Guesty Speaker",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          }
+        ]
+      },
+      {
+        "id": "stgc34kw",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Keynote] - Amiad Soto",
+        "description": "Opening session ",
+        "startTime": 120,
+        "duration": 20,
+        "color": "#B2E4E3",
+        "type": "Keynote",
+        "speakers": []
+      },
+      {
+        "id": "sja63upm",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Keynote] - Airbnb",
+        "description": "",
+        "startTime": 145,
+        "duration": 20,
+        "color": "#B2E4E3",
+        "type": "Keynote",
+        "speakers": []
+      },
+      {
+        "id": "s5n7tk6h",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Masterclass] - The trust dividend: Mastering owner retention in the transparency era",
+        "description": "This masterclass focuses on strategic relationship-building, and how real-time transparency acts as the ultimate retention tool. We will explore the mechanics of \"The Trust Dividend\"—proving how instant financial visibility, branded performance dashboards, and proactive communication flows transform skeptical homeowners into long-term brand advocates. ",
+        "startTime": 170,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "sjnks9hg",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "Blocked",
+        "description": "",
+        "startTime": 120,
+        "duration": 45,
+        "color": "#FE8673",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "sapg2g5j",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "Blocked",
+        "description": "",
+        "startTime": 120,
+        "duration": 45,
+        "color": "#FE8673",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "si12561m",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "☕ Networking & Coffee Break",
+        "description": "",
+        "startTime": 190,
+        "duration": 45,
+        "color": "#EEFAD0",
+        "type": "Break",
+        "speakers": []
+      },
+      {
+        "id": "snk9qjab",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "Airbnb workshop",
+        "description": "",
+        "startTime": 235,
+        "duration": 45,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "slkem705",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Panel] The growth funnel: Scaling through strategic channel distribution",
+        "description": "Diversified distribution has evolved from a growth tactic into a fundamental requirement for revenue stability. This masterclass provides a technical breakdown of how to build and manage a distribution strategy. Experts from top OTAs and booking channels will share specific methodologies for capturing distinct high-value segments. Dive into the mechanics of reducing channel dependency, using performance data to identify high-yield platforms, and leveraging an expanded digital footprint to stabilize occupancy during off-peak periods. Leave with a framework for selecting a channel mix that maximizes RevPAR and global visibility while maintaining operational efficiency across a scaling portfolio.",
+        "startTime": 260,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Other",
+        "speakers": [
+          {
+            "id": "b1ariq",
+            "name": " Livily (Gold)",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          },
+          {
+            "id": "m9li2",
+            "name": "Hometogo (Gold)",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          },
+          {
+            "id": "urz9",
+            "name": "Guesty rep",
+            "title": "",
+            "company": "",
+            "isModerator": true
+          }
+        ]
+      },
+      {
+        "id": "sqpa1nsf",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "[Workshop] Financial maturity: Mastering taxes, Trust Accounting, and expenses (EMEA)",
+        "description": "",
+        "startTime": 170,
+        "duration": 30,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "stwacbkh",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Panel] - The nuance of automation: Building guest trust through AI",
+        "description": " In the high-stakes world of guest service, trust is won or lost in the nuance of communication. This masterclass provides a strategic blueprint for a hybrid AI standards, teaching you how to navigate the delicate balance between machine efficiency and human empathy. We will dive into the silent engine of successful AI—structured data—and demonstrate how organized internal knowledge-bases are the key to accurate, reliable automation. You will learn a clear framework for categorizing guest interactions: identifying what should be fully automated, what requires a hybrid hand-off, and where the human touch remains irreplaceable. Attendees will leave with a roadmap for building a communication ecosystem that delivers 24/7 responsiveness while preserving the authentic connection that defines professional hospitality.",
+        "startTime": 285,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Other",
+        "speakers": [
+          {
+            "id": "wxyem",
+            "name": "Extenteam (Gold)",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          },
+          {
+            "id": "5ct0r",
+            "name": "Guesty User",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          }
+        ]
+      },
+      {
+        "id": "s06618qb",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "[Workshop] Capitalizing on data with Guesty's Co-pilot",
+        "description": "",
+        "startTime": 285,
+        "duration": 30,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "snwgs2mw",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "[Workshop]  Discoverability in the age of AI: Winning the new search paradigm",
+        "description": "",
+        "startTime": 285,
+        "duration": 30,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "snkspmvb",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": " 🍽️  Lunch & Networking",
+        "description": "",
+        "startTime": 330,
+        "duration": 80,
+        "color": "#EEFAD0",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "sjs8o0wt",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Fireside chat] - Building a winning technology architecture",
+        "description": "",
+        "startTime": 310,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "skdsj76b",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Keynote] - Breezeway - platinum",
+        "description": "",
+        "startTime": 410,
+        "duration": 20,
+        "color": "#B2E4E3",
+        "type": "Keynote",
+        "speakers": []
+      },
+      {
+        "id": "s6m5z3sg",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Keynote] - HVMB - platinum",
+        "description": "",
+        "startTime": 435,
+        "duration": 20,
+        "color": "#B2E4E3",
+        "type": "Keynote",
+        "speakers": []
+      },
+      {
+        "id": "shki4q3y",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "Blocked",
+        "description": "",
+        "startTime": 410,
+        "duration": 45,
+        "color": "#FE8673",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "sx17pjap",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "Blocked",
+        "description": "",
+        "startTime": 410,
+        "duration": 45,
+        "color": "#FE8673",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "sog674ez",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "Regulatory Panel",
+        "description": "ASTRA chairman Yoav tourel, Graham (UKSTAA) and Eduardo Miranda, Board of the European Holiday Homes Association (EHHA) ",
+        "startTime": 460,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Panel",
+        "speakers": []
+      },
+      {
+        "id": "sazagz2c",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "[TPM Roundtables] #1",
+        "description": "",
+        "startTime": 460,
+        "duration": 20,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "s46ca97r",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "Blocked",
+        "description": "",
+        "startTime": 460,
+        "duration": 20,
+        "color": "#FE8673",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "s8qv0yaa",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "Breaking the ceiling: Scaling past the 150-unit stall",
+        "description": "Most property management companies find that the systems that fueled their early success become the very barriers that stall growth as they approach the 150-unit mark. This session explores that \"messy middle\" of scaling, where operational inconsistencies and fragmented processes create a hidden drag on performance and profitability.  We'll unpack the shift required to move from reactive, personality-driven management to a structured, scalable enterprise. You will learn to identify the blind spots in lead management and owner onboarding that limit expansion and discover why sustainable growth depends on scaling your systems rather than your manual efforts. Walk away with a clear framework for auditing your internal friction points and building the robust operational foundation necessary to break through the mid-market plateau.",
+        "startTime": 485,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Panel",
+        "speakers": [
+          {
+            "id": "dtfdqo",
+            "name": "Michelle Marquis",
+            "title": "",
+            "company": "",
+            "isModerator": true
+          },
+          {
+            "id": "1qld49",
+            "name": "Guesty Speaker",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          }
+        ]
+      },
+      {
+        "id": "s1r30e6l",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "[Workshop] The central nervous system: Build your competitive edge on Guesty ",
+        "description": "",
+        "startTime": 485,
+        "duration": 30,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "sin5mmd6",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "☕ Networking & Coffee Break",
+        "description": "",
+        "startTime": 505,
+        "duration": 30,
+        "color": "#EEFAD0",
+        "type": "Break",
+        "speakers": []
+      },
+      {
+        "id": "s32vjrxi",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Panel] Defending Your EBITDA:  Advanced price optimization in a saturated market",
+        "description": "In an oversupplied market with rising costs, protecting your EBITDA requires a shift from passive pricing to data-driven revenue science. This masterclass outlines a scientific revenue approach, combining dynamic pricing with strategic yield optimization to balance occupancy and rate. We will demonstrate how to use real-time data to optimize nightly rates while simultaneously unlocking high-margin ancillary revenue through upsells. Learn how to maximize the profitability of every booking and maintain a competitive edge, even as the market saturates.\"",
+        "startTime": 535,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Panel",
+        "speakers": []
+      },
+      {
+        "id": "sxvxlehr",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "[Tech Talks] # 1 - (Silver) ",
+        "description": "",
+        "startTime": 485,
+        "duration": 20,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": [
+          {
+            "id": "jj0by2",
+            "name": "Hopper",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          },
+          {
+            "id": "flaku5",
+            "name": "Faye",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          },
+          {
+            "id": "pkm80f",
+            "name": "StayFi",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          },
+          {
+            "id": "yvld2",
+            "name": "Trip.com",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          }
+        ]
+      },
+      {
+        "id": "sr3pz7w9",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "[Workshop] Optimizing your PMS",
+        "description": "",
+        "startTime": 535,
+        "duration": 20,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": [
+          {
+            "id": "glp91d",
+            "name": "Tal Sassover",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          }
+        ]
+      },
+      {
+        "id": "sowndoxc",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "[Workshop] Financial maturity: Mastering taxes, Trust Accounting, and expenses (Americas)",
+        "description": "",
+        "startTime": 535,
+        "duration": 30,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "seaqqebh",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "[Masterclass] Airbnb",
+        "description": "",
+        "startTime": 560,
+        "duration": 20,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "scs448pb",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "[Fireside chat] - Shaping the future of STR with AI  (TBD)",
+        "description": "",
+        "startTime": 580,
+        "duration": 20,
+        "color": "#FFE3E3",
+        "type": "Other",
+        "speakers": [
+          {
+            "id": "1zcfjc",
+            "name": "Graham Donoghue",
+            "title": "",
+            "company": "Forge",
+            "isModerator": false
+          },
+          {
+            "id": "tm4p7r",
+            "name": "Guesty AI expert",
+            "title": "",
+            "company": "",
+            "isModerator": false
+          }
+        ]
+      },
+      {
+        "id": "skrypuhl",
+        "roomId": "r1",
+        "dayId": "day-1",
+        "name": "Vered's closing remarks",
+        "description": "",
+        "startTime": 605,
+        "duration": 20,
+        "color": "#B2E4E3",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "see0hh9a",
+        "roomId": "r2",
         "dayId": "day-1",
         "name": "New Session",
         "description": "",
-        "startTime": 20,
-        "duration": 150,
-        "color": "#D1E2D3",
+        "startTime": 40,
+        "duration": 20,
+        "color": "#EBF0FF"
+      },
+      {
+        "id": "svu6479j",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "[Workshop] The Guesty revenue engine ",
+        "description": "Shir Yarden",
+        "startTime": 570,
+        "duration": 30,
+        "color": "#EBF0FF",
+        "type": "Other",
+        "speakers": []
+      },
+      {
+        "id": "sdn1ey6x",
+        "roomId": "r2",
+        "dayId": "day-1",
+        "name": "Blocked",
+        "description": "",
+        "startTime": 605,
+        "duration": 20,
+        "color": "#FE8673",
+        "type": "Break",
+        "speakers": []
+      },
+      {
+        "id": "sx7ao7a0",
+        "roomId": "r3",
+        "dayId": "day-1",
+        "name": "Blocked",
+        "description": "",
+        "startTime": 605,
+        "duration": 20,
+        "color": "#FE8673",
         "type": "Other",
         "speakers": []
       }
     ],
     "daySettings": {
       "day-1": {
-        "startHour": 8,
-        "endHour": 18
+        "startHour": 8.5,
+        "endHour": 18.5
       },
       "day-2": {
         "startHour": 8,
@@ -85,7 +634,7 @@
           "name": "Main Stage",
           "daySettings": {
             "day-1": {
-              "capacity": 100,
+              "capacity": 700,
               "setupType": "Theater",
               "isHidden": false
             },
@@ -101,8 +650,8 @@
           "name": "Masterclasses",
           "daySettings": {
             "day-1": {
-              "capacity": 100,
-              "setupType": "Theater",
+              "capacity": 300,
+              "setupType": "Roundtable",
               "isHidden": false
             },
             "day-2": {
@@ -131,108 +680,566 @@
       ],
       "sessions": [
         {
-          "id": "sfsh0n3a",
+          "id": "srx6e26o",
           "roomId": "r1",
           "dayId": "day-1",
-          "name": "New Session",
+          "name": "Registration & Breakfast",
           "description": "",
-          "startTime": 20,
+          "startTime": 60,
+          "duration": 60,
+          "color": "#EEFAD0",
+          "type": "Break",
+          "speakers": []
+        },
+        {
+          "id": "skuwvb8e",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Fireside Chat] Unlocking the greater power of data",
+          "description": "With the AI tools that exist today for operators, the potential to shift your data into applied practices and insights can be transformational.  data collection to the active application of information . This session will cover the foundational requirement of data integrity and the methods for transforming raw datasets into actionable insights for informed decision-making. We will cover how updated data programs serve as engines for business growth and optimization and explore the latest capabilities and tools available to professionalize data management, moving beyond basic reporting toward a model of data-driven operational excellence. ",
+          "startTime": 235,
           "duration": 20,
-          "color": "#D1E2D3",
+          "color": "#FFE3E3",
+          "type": "Panel",
+          "speakers": [
+            {
+              "id": "8j23zp",
+              "name": "EnsoConnect (Gold)",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            },
+            {
+              "id": "1srnt",
+              "name": "Guesty Speaker",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            }
+          ]
+        },
+        {
+          "id": "stgc34kw",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Keynote] - Amiad Soto",
+          "description": "Opening session ",
+          "startTime": 120,
+          "duration": 20,
+          "color": "#B2E4E3",
+          "type": "Keynote",
+          "speakers": []
+        },
+        {
+          "id": "sja63upm",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Keynote] - Airbnb",
+          "description": "",
+          "startTime": 145,
+          "duration": 20,
+          "color": "#B2E4E3",
+          "type": "Keynote",
+          "speakers": []
+        },
+        {
+          "id": "s5n7tk6h",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Masterclass] - The trust dividend: Mastering owner retention in the transparency era",
+          "description": "This masterclass focuses on strategic relationship-building, and how real-time transparency acts as the ultimate retention tool. We will explore the mechanics of \"The Trust Dividend\"—proving how instant financial visibility, branded performance dashboards, and proactive communication flows transform skeptical homeowners into long-term brand advocates. ",
+          "startTime": 170,
+          "duration": 20,
+          "color": "#FFE3E3",
           "type": "Other",
           "speakers": []
-        }
-      ],
-      "daySettings": {
-        "day-1": {
-          "startHour": 8,
-          "endHour": 18
-        },
-        "day-2": {
-          "startHour": 8,
-          "endHour": 18
-        }
-      },
-      "name": "teste",
-      "timestamp": 1778614462081
-    },
-    {
-      "rooms": [
-        {
-          "id": "r1",
-          "name": "Main Stage",
-          "daySettings": {
-            "day-1": {
-              "capacity": 100,
-              "setupType": "Theater",
-              "isHidden": false
-            },
-            "day-2": {
-              "capacity": 100,
-              "setupType": "Theater",
-              "isHidden": false
-            }
-          }
         },
         {
-          "id": "r2",
-          "name": "Masterclasses",
-          "daySettings": {
-            "day-1": {
-              "capacity": 100,
-              "setupType": "Theater",
-              "isHidden": false
-            },
-            "day-2": {
-              "capacity": 100,
-              "setupType": "Theater",
-              "isHidden": false
-            }
-          }
+          "id": "sjnks9hg",
+          "roomId": "r2",
+          "dayId": "day-1",
+          "name": "Blocked",
+          "description": "",
+          "startTime": 120,
+          "duration": 45,
+          "color": "#FE8673",
+          "type": "Other",
+          "speakers": []
         },
         {
-          "id": "r3",
-          "name": "Workshops",
-          "daySettings": {
-            "day-1": {
-              "capacity": 100,
-              "setupType": "Theater",
-              "isHidden": false
-            },
-            "day-2": {
-              "capacity": 100,
-              "setupType": "Theater",
-              "isHidden": false
-            }
-          }
-        }
-      ],
-      "sessions": [
+          "id": "sapg2g5j",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "Blocked",
+          "description": "",
+          "startTime": 120,
+          "duration": 45,
+          "color": "#FE8673",
+          "type": "Other",
+          "speakers": []
+        },
         {
-          "id": "s7iwo7kb",
+          "id": "si12561m",
           "roomId": "r1",
+          "dayId": "day-1",
+          "name": "☕ Networking & Coffee Break",
+          "description": "",
+          "startTime": 190,
+          "duration": 45,
+          "color": "#EEFAD0",
+          "type": "Break",
+          "speakers": []
+        },
+        {
+          "id": "snk9qjab",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "Airbnb workshop",
+          "description": "",
+          "startTime": 235,
+          "duration": 45,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "slkem705",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Panel] The growth funnel: Scaling through strategic channel distribution",
+          "description": "Diversified distribution has evolved from a growth tactic into a fundamental requirement for revenue stability. This masterclass provides a technical breakdown of how to build and manage a distribution strategy. Experts from top OTAs and booking channels will share specific methodologies for capturing distinct high-value segments. Dive into the mechanics of reducing channel dependency, using performance data to identify high-yield platforms, and leveraging an expanded digital footprint to stabilize occupancy during off-peak periods. Leave with a framework for selecting a channel mix that maximizes RevPAR and global visibility while maintaining operational efficiency across a scaling portfolio.",
+          "startTime": 260,
+          "duration": 20,
+          "color": "#FFE3E3",
+          "type": "Other",
+          "speakers": [
+            {
+              "id": "b1ariq",
+              "name": " Livily (Gold)",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            },
+            {
+              "id": "m9li2",
+              "name": "Hometogo (Gold)",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            },
+            {
+              "id": "urz9",
+              "name": "Guesty rep",
+              "title": "",
+              "company": "",
+              "isModerator": true
+            }
+          ]
+        },
+        {
+          "id": "sqpa1nsf",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "[Workshop] Financial maturity: Mastering taxes, Trust Accounting, and expenses (EMEA)",
+          "description": "",
+          "startTime": 170,
+          "duration": 30,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "stwacbkh",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Panel] - The nuance of automation: Building guest trust through AI",
+          "description": " In the high-stakes world of guest service, trust is won or lost in the nuance of communication. This masterclass provides a strategic blueprint for a hybrid AI standards, teaching you how to navigate the delicate balance between machine efficiency and human empathy. We will dive into the silent engine of successful AI—structured data—and demonstrate how organized internal knowledge-bases are the key to accurate, reliable automation. You will learn a clear framework for categorizing guest interactions: identifying what should be fully automated, what requires a hybrid hand-off, and where the human touch remains irreplaceable. Attendees will leave with a roadmap for building a communication ecosystem that delivers 24/7 responsiveness while preserving the authentic connection that defines professional hospitality.",
+          "startTime": 285,
+          "duration": 20,
+          "color": "#FFE3E3",
+          "type": "Other",
+          "speakers": [
+            {
+              "id": "wxyem",
+              "name": "Extenteam (Gold)",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            },
+            {
+              "id": "5ct0r",
+              "name": "Guesty User",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            }
+          ]
+        },
+        {
+          "id": "s06618qb",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "[Workshop] Capitalizing on data with Guesty's Co-pilot",
+          "description": "",
+          "startTime": 285,
+          "duration": 30,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "snwgs2mw",
+          "roomId": "r2",
+          "dayId": "day-1",
+          "name": "[Workshop]  Discoverability in the age of AI: Winning the new search paradigm",
+          "description": "",
+          "startTime": 285,
+          "duration": 30,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "snkspmvb",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": " 🍽️  Lunch & Networking",
+          "description": "",
+          "startTime": 330,
+          "duration": 80,
+          "color": "#EEFAD0",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "sjs8o0wt",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Fireside chat] - Building a winning technology architecture",
+          "description": "",
+          "startTime": 310,
+          "duration": 20,
+          "color": "#FFE3E3",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "skdsj76b",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Keynote] - Breezeway - platinum",
+          "description": "",
+          "startTime": 410,
+          "duration": 20,
+          "color": "#B2E4E3",
+          "type": "Keynote",
+          "speakers": []
+        },
+        {
+          "id": "s6m5z3sg",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Keynote] - HVMB - platinum",
+          "description": "",
+          "startTime": 435,
+          "duration": 20,
+          "color": "#B2E4E3",
+          "type": "Keynote",
+          "speakers": []
+        },
+        {
+          "id": "shki4q3y",
+          "roomId": "r2",
+          "dayId": "day-1",
+          "name": "Blocked",
+          "description": "",
+          "startTime": 410,
+          "duration": 45,
+          "color": "#FE8673",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "sx17pjap",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "Blocked",
+          "description": "",
+          "startTime": 410,
+          "duration": 45,
+          "color": "#FE8673",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "sog674ez",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "Regulatory Panel",
+          "description": "ASTRA chairman Yoav tourel, Graham (UKSTAA) and Eduardo Miranda, Board of the European Holiday Homes Association (EHHA) ",
+          "startTime": 460,
+          "duration": 20,
+          "color": "#FFE3E3",
+          "type": "Panel",
+          "speakers": []
+        },
+        {
+          "id": "sazagz2c",
+          "roomId": "r2",
+          "dayId": "day-1",
+          "name": "[TPM Roundtables] #1",
+          "description": "",
+          "startTime": 460,
+          "duration": 20,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "s46ca97r",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "Blocked",
+          "description": "",
+          "startTime": 460,
+          "duration": 20,
+          "color": "#FE8673",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "s8qv0yaa",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "Breaking the ceiling: Scaling past the 150-unit stall",
+          "description": "Most property management companies find that the systems that fueled their early success become the very barriers that stall growth as they approach the 150-unit mark. This session explores that \"messy middle\" of scaling, where operational inconsistencies and fragmented processes create a hidden drag on performance and profitability.  We'll unpack the shift required to move from reactive, personality-driven management to a structured, scalable enterprise. You will learn to identify the blind spots in lead management and owner onboarding that limit expansion and discover why sustainable growth depends on scaling your systems rather than your manual efforts. Walk away with a clear framework for auditing your internal friction points and building the robust operational foundation necessary to break through the mid-market plateau.",
+          "startTime": 485,
+          "duration": 20,
+          "color": "#FFE3E3",
+          "type": "Panel",
+          "speakers": [
+            {
+              "id": "dtfdqo",
+              "name": "Michelle Marquis",
+              "title": "",
+              "company": "",
+              "isModerator": true
+            },
+            {
+              "id": "1qld49",
+              "name": "Guesty Speaker",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            }
+          ]
+        },
+        {
+          "id": "s1r30e6l",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "[Workshop] The central nervous system: Build your competitive edge on Guesty ",
+          "description": "",
+          "startTime": 485,
+          "duration": 30,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "sin5mmd6",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "☕ Networking & Coffee Break",
+          "description": "",
+          "startTime": 505,
+          "duration": 30,
+          "color": "#EEFAD0",
+          "type": "Break",
+          "speakers": []
+        },
+        {
+          "id": "s32vjrxi",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Panel] Defending Your EBITDA:  Advanced price optimization in a saturated market",
+          "description": "In an oversupplied market with rising costs, protecting your EBITDA requires a shift from passive pricing to data-driven revenue science. This masterclass outlines a scientific revenue approach, combining dynamic pricing with strategic yield optimization to balance occupancy and rate. We will demonstrate how to use real-time data to optimize nightly rates while simultaneously unlocking high-margin ancillary revenue through upsells. Learn how to maximize the profitability of every booking and maintain a competitive edge, even as the market saturates.\"",
+          "startTime": 535,
+          "duration": 20,
+          "color": "#FFE3E3",
+          "type": "Panel",
+          "speakers": []
+        },
+        {
+          "id": "sxvxlehr",
+          "roomId": "r2",
+          "dayId": "day-1",
+          "name": "[Tech Talks] # 1 - (Silver) ",
+          "description": "",
+          "startTime": 485,
+          "duration": 20,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": [
+            {
+              "id": "jj0by2",
+              "name": "Hopper",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            },
+            {
+              "id": "flaku5",
+              "name": "Faye",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            },
+            {
+              "id": "pkm80f",
+              "name": "StayFi",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            },
+            {
+              "id": "yvld2",
+              "name": "Trip.com",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            }
+          ]
+        },
+        {
+          "id": "sr3pz7w9",
+          "roomId": "r2",
+          "dayId": "day-1",
+          "name": "[Workshop] Optimizing your PMS",
+          "description": "",
+          "startTime": 535,
+          "duration": 20,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": [
+            {
+              "id": "glp91d",
+              "name": "Tal Sassover",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            }
+          ]
+        },
+        {
+          "id": "sowndoxc",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "[Workshop] Financial maturity: Mastering taxes, Trust Accounting, and expenses (Americas)",
+          "description": "",
+          "startTime": 535,
+          "duration": 30,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "seaqqebh",
+          "roomId": "r2",
+          "dayId": "day-1",
+          "name": "[Masterclass] Airbnb",
+          "description": "",
+          "startTime": 560,
+          "duration": 20,
+          "color": "#EBF0FF",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "scs448pb",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "[Fireside chat] - Shaping the future of STR with AI  (TBD)",
+          "description": "Graham Donoghue (Forge) + (External AI expert TBD) + Guesty AI expert",
+          "startTime": 580,
+          "duration": 20,
+          "color": "#FFE3E3",
+          "type": "Other",
+          "speakers": [
+            {
+              "id": "1zcfjc",
+              "name": "Graham Donoghue",
+              "title": "",
+              "company": "Forge",
+              "isModerator": false
+            },
+            {
+              "id": "tm4p7r",
+              "name": "Guesty AI expert",
+              "title": "",
+              "company": "",
+              "isModerator": false
+            }
+          ]
+        },
+        {
+          "id": "skrypuhl",
+          "roomId": "r1",
+          "dayId": "day-1",
+          "name": "Vered's closing remarks",
+          "description": "",
+          "startTime": 605,
+          "duration": 20,
+          "color": "#B2E4E3",
+          "type": "Other",
+          "speakers": []
+        },
+        {
+          "id": "see0hh9a",
+          "roomId": "r2",
           "dayId": "day-1",
           "name": "New Session",
           "description": "",
-          "startTime": 20,
-          "duration": 150,
-          "color": "#D1E2D3",
+          "startTime": 40,
+          "duration": 20,
+          "color": "#EBF0FF"
+        },
+        {
+          "id": "svu6479j",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "[Workshop] The Guesty revenue engine ",
+          "description": "Shir Yarden",
+          "startTime": 570,
+          "duration": 30,
+          "color": "#EBF0FF",
           "type": "Other",
           "speakers": []
+        },
+        {
+          "id": "sftni2d2",
+          "roomId": "r3",
+          "dayId": "day-1",
+          "name": "New Session",
+          "description": "",
+          "startTime": 615,
+          "duration": 20,
+          "color": "#EBF0FF"
         }
       ],
       "daySettings": {
         "day-1": {
-          "startHour": 8,
-          "endHour": 18
+          "startHour": 8.5,
+          "endHour": 18.5
         },
         "day-2": {
           "startHour": 8,
           "endHour": 18
         }
       },
-      "name": "GV 2026",
-      "timestamp": 1778616087843
+      "eventName": "GuestyVal 2026",
+      "name": "Guestyval 2026",
+      "timestamp": 1778672039369
     }
   ]
 }

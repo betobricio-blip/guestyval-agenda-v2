@@ -4,7 +4,8 @@ import {
     X, Trash2, ChevronDown, Plus, User, Mic, ChevronUp, 
     ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench, Sparkles, MoveUp, MoveDown 
 } from 'lucide-react';
-import { MODERN_PALETTE } from '../constants';
+import { toast } from 'react-hot-toast';
+import { MODERN_PALETTE, minutesToTime, timeToMinutes } from '../constants';
 import { getContrastText } from '../utils';
 
 const COLORS = MODERN_PALETTE.map(p => p.bg);
@@ -28,17 +29,7 @@ interface SessionModalProps {
     endHour: number;
 }
 
-const minutesToTimeString = (mins: number, startHour: number) => {
-    const h = Math.floor(mins / 60) + startHour;
-    const m = mins % 60;
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-};
-
-const timeStringToMinutes = (timeStr: string, startHour: number) => {
-    const [h, m] = timeStr.split(':').map(Number);
-    if (isNaN(h) || isNaN(m)) return null;
-    return (h - startHour) * 60 + m;
-};
+// Using imported time utilities
 
 export const SessionModal: React.FC<SessionModalProps> = ({
     session,
@@ -54,13 +45,29 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     const [description, setDescription] = useState(session.description);
     const [duration, setDuration] = useState(session.duration);
     const [startTime, setStartTime] = useState(session.startTime);
-    const [startTimeInput, setStartTimeInput] = useState(minutesToTimeString(session.startTime, startHour));
+    const [startTimeInput, setStartTimeInput] = useState(minutesToTime(session.startTime, startHour));
     const [color, setColor] = useState(session.color);
     const [speakers, setSpeakers] = useState<Speaker[]>(session.speakers || []);
     const [hasConflict, setHasConflict] = useState(false);
+    
+    // Sync only time-related fields in real-time (allowing background drag & drop)
+    useEffect(() => {
+        setStartTime(session.startTime);
+        setStartTimeInput(minutesToTime(session.startTime, 8));
+        setDuration(session.duration);
+    }, [session.startTime, session.duration]);
+
+    // Reset metadata fields ONLY when switching to a different session
+    useEffect(() => {
+        setName(session.name);
+        setDescription(session.description || '');
+        setType(session.type || 'Other');
+        setColor(session.color);
+        setSpeakers(session.speakers || []);
+    }, [session.id]);
 
     useEffect(() => {
-        const parsedInputMins = timeStringToMinutes(startTimeInput, startHour);
+        const parsedInputMins = timeToMinutes(startTimeInput, 8);
         const currentStartTime = parsedInputMins !== null ? parsedInputMins : startTime;
 
         const conflict = sessions.some(s =>
@@ -124,7 +131,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
         newMins = Math.max(0, Math.min(newMins, Math.round(maxMins / 5) * 5));
         
         setStartTime(newMins);
-        setStartTimeInput(minutesToTimeString(newMins, startHour));
+        setStartTimeInput(minutesToTime(newMins, 8));
         
         // Immediate Grid Sync
         onUpdate({ startTime: newMins });
@@ -143,21 +150,49 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     };
 
     const handleTimeBlur = () => {
-        let mins = timeStringToMinutes(startTimeInput, startHour);
-        if (mins === null) {
-            setStartTimeInput(minutesToTimeString(startTime, startHour));
+        let mins = timeToMinutes(startTimeInput, 8);
+        if (mins === null || isNaN(mins)) {
+            setStartTimeInput(minutesToTime(startTime, 8));
             return;
         }
         mins = Math.round(mins / 5) * 5;
-        const maxMins = (endHour - startHour) * 60 - duration;
-        mins = Math.max(0, Math.min(mins, maxMins));
+        const gridStartMins = (startHour - 8) * 60;
+        const gridEndMins = (endHour - 8) * 60;
+        const maxMins = gridEndMins - duration;
+        
+        mins = Math.max(gridStartMins, Math.min(mins, maxMins));
         setStartTime(mins);
-        setStartTimeInput(minutesToTimeString(mins, startHour));
+        setStartTimeInput(minutesToTime(mins, 8));
     };
 
     const handleSave = () => {
-        if (hasConflict) return;
-        onUpdate({ name, description, duration, startTime, color, type, speakers });
+        // Ensure we have the latest time from the input field if it hasn't blurred
+        let mins = timeToMinutes(startTimeInput, 8);
+        if (mins !== null && !isNaN(mins)) {
+            mins = Math.round(mins / 5) * 5;
+            const gridStartMins = (startHour - 8) * 60;
+            const gridEndMins = (endHour - 8) * 60;
+            const maxMins = gridEndMins - duration;
+            const finalMins = Math.max(gridStartMins, Math.min(mins, maxMins));
+            
+            // Re-check conflict with the final calculated mins
+            const conflict = sessions.some(s =>
+                s.id !== session.id &&
+                s.roomId === session.roomId &&
+                s.dayId === session.dayId &&
+                !(finalMins + duration <= s.startTime || finalMins >= s.startTime + s.duration)
+            );
+
+            if (conflict) {
+                toast.error("Cannot save: Time conflict with another session");
+                setHasConflict(true);
+                return;
+            }
+
+            onUpdate({ name, description, duration, startTime: finalMins, color, type, speakers });
+        } else {
+            onUpdate({ name, description, duration, startTime, color, type, speakers });
+        }
         onClose();
     };
 
@@ -420,7 +455,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                         disabled={hasConflict}
                         className={`px-8 py-2.5 rounded-xl font-bold text-sm shadow-xl transition-all ${hasConflict ? 'bg-slate-300' : 'bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95 shadow-emerald-600/20'}`}
                     >
-                        Save Agenda
+                        Save Session
                     </button>
                 </div>
             </div>
