@@ -666,15 +666,16 @@ function App() {
   };
 
   const handleExport = () => {
+    const currentState = { rooms, sessions, daySettings, viewMode, eventName };
     const data = {
-        current: JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'),
+        current: currentState,
         saved: JSON.parse(localStorage.getItem('guestyval_saved') || '[]')
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'Agenda_Data.json';
+    link.download = `Agenda_${eventName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
     toast.success('Agenda data exported');
