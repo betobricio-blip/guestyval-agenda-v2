@@ -6,7 +6,7 @@ export const PIXELS_PER_MINUTE = 2; // 2 pixels per minute for better readabilit
 export const GRID_HEADER_HEIGHT = 60; // Standard Stage Header height
 export const GRID_GUTTER_TOP = 0; // Removing the gutter for absolute alignment
 export const COLUMN_WIDTH = 280;
-export const MIN_SESSION_DURATION = 20;
+export const MIN_SESSION_DURATION = 5;
 export const DEFAULT_SESSION_DURATION = 30;
 
 export const MODERN_PALETTE = [

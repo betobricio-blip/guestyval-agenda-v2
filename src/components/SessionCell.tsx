@@ -76,7 +76,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             style={sessionStyle}
             className="flex items-stretch group overflow-visible hover:brightness-95 select-none"
         >
-            {!readOnly && (
+            {!readOnly && duration >= 15 && (
                 <div 
                     className="w-5 flex items-center justify-center cursor-greedy active:cursor-grabbing hover:bg-black/5 transition-colors shrink-0 border-r border-black/5 z-10"
                     onMouseDown={(e) => {
@@ -90,13 +90,28 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             )}
 
             {/* Content Area */}
-            <div className="flex-1 px-3 flex flex-col justify-center min-w-0">
-                <div className="flex items-center gap-1.5 overflow-hidden text-[11px] font-extrabold whitespace-nowrap leading-tight" style={{ color: textColor }}>
+            <div 
+                className={`flex-1 flex flex-col justify-center min-w-0 ${duration < 15 ? 'px-2' : 'px-3'}`}
+                onMouseDown={(e) => {
+                    if (!readOnly && duration < 15) {
+                        e.stopPropagation();
+                        onInitiateDrag(e);
+                    }
+                }}
+            >
+                <div 
+                    className={`flex items-center gap-1.5 overflow-hidden font-extrabold whitespace-nowrap leading-none ${duration < 15 ? 'text-[9px]' : 'text-[11px]'}`} 
+                    style={{ color: textColor }}
+                >
                     <span className="truncate min-w-0">{name}</span>
-                    <span className="opacity-30 shrink-0 font-normal">|</span>
-                    <span className="shrink-0 font-bold opacity-80">
-                        {minutesToTime(startTime, 8)} ({duration}m)
-                    </span>
+                    {duration >= 15 && (
+                        <>
+                            <span className="opacity-30 shrink-0 font-normal">|</span>
+                            <span className="shrink-0 font-bold opacity-80">
+                                {minutesToTime(startTime, 8)} ({duration}m)
+                            </span>
+                        </>
+                    )}
                 </div>
                 
                 {/* Speaker Display (>45m) */}

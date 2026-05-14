@@ -139,7 +139,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     };
 
     const handleShiftDuration = (delta: number) => {
-        const newDur = Math.max(20, duration + delta);
+        const newDur = Math.max(5, duration + delta);
         setDuration(newDur);
         
         // Immediate Grid Sync
