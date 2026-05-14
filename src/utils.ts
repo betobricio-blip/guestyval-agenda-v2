@@ -60,18 +60,36 @@ export const isColliding = (
 };
 
 export const getSessionTextColor = (bgColor: string): string => {
-    if (!bgColor || typeof bgColor !== 'string') return '#1e293b';
+    const DEFAULT_TEXT = '#1e293b';
+    if (!bgColor || typeof bgColor !== 'string') return DEFAULT_TEXT;
+    
     const paletteMatch = MODERN_PALETTE.find(p => p.bg.toLowerCase() === bgColor.toLowerCase());
     if (paletteMatch) return paletteMatch.text;
     
-    // Fallback to standard contrast if color is custom
-    if (!bgColor || bgColor.length < 6) return '#1e293b';
+    // Handle RGB colors
+    if (bgColor.startsWith('rgb')) {
+        const rgb = bgColor.match(/\d+/g);
+        if (rgb && rgb.length >= 3) {
+            const r = parseInt(rgb[0]);
+            const g = parseInt(rgb[1]);
+            const b = parseInt(rgb[2]);
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            // Use 128 as midpoint, but the user requested "back to previous" which often means dark text
+            return (yiq >= 128) ? DEFAULT_TEXT : '#ffffff';
+        }
+    }
+    
+    // Handle Hex colors
     const hex = bgColor.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-    return (yiq >= 150) ? '#1e293b' : '#f8fafc';
+    if (hex.length === 6) {
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= 128) ? DEFAULT_TEXT : '#ffffff';
+    }
+
+    return DEFAULT_TEXT;
 };
 
 export const getContrastText = (hexcolor: string): string => {
