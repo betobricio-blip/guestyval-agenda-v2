@@ -93,7 +93,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
 
             {/* Content Area */}
             <div 
-                className={`flex-1 flex flex-col justify-center min-w-0 ${duration < 15 ? 'px-2' : 'px-3'}`}
+                className={`flex-1 flex items-center min-w-0 ${duration < 15 ? 'px-1' : 'px-2'}`}
                 onMouseDown={(e) => {
                     if (!readOnly && duration < 15) {
                         e.stopPropagation();
@@ -101,48 +101,54 @@ export const SessionCell: React.FC<SessionCellProps> = ({
                     }
                 }}
             >
-                <div 
-                    className={`flex items-center gap-1.5 overflow-hidden font-extrabold whitespace-nowrap leading-none ${duration < 15 ? 'text-[9px]' : 'text-[11px]'}`} 
-                    style={{ color: textColor }}
-                >
-                    <span className="truncate min-w-0">{name}</span>
-                    {duration >= 15 && (
-                        <>
-                            <span className="opacity-30 shrink-0 font-normal">|</span>
-                            <span className="shrink-0 font-bold opacity-80">
-                                {minutesToTime(startTime, 8)} - {minutesToTime(startTime + duration, 8)} ({duration}m)
+                <div className="flex-1 flex flex-col justify-center min-w-0 py-1">
+                    <div className="flex items-baseline gap-1.5 overflow-hidden">
+                        {type && (
+                            <span className={`uppercase tracking-tighter font-black opacity-60 shrink-0 ${duration < 15 ? 'text-[7px]' : 'text-[8px]'}`}>
+                                [{type}]
                             </span>
-                        </>
+                        )}
+                        <span className={`font-extrabold truncate min-w-0 ${duration < 15 ? 'text-[9px]' : 'text-[11px]'}`} style={{ color: textColor }}>
+                            {name}
+                        </span>
+                    </div>
+                    
+                    {/* Speaker Display (Condensed or with Toggle) */}
+                    {showSpeakers && speakers && speakers.length > 0 ? (
+                        <div 
+                            className="text-[9px] font-bold mt-0.5 leading-tight opacity-90 overflow-hidden" 
+                            style={{ 
+                                color: textColor,
+                                display: '-webkit-box',
+                                WebkitLineClamp: duration < 30 ? 1 : 2,
+                                WebkitBoxOrient: 'vertical'
+                            }}
+                        >
+                            {(() => {
+                                const sortedSpeakers = [...speakers].sort((a, b) => (b.isModerator ? 1 : 0) - (a.isModerator ? 1 : 0));
+                                return sortedSpeakers.map((s, idx) => (
+                                    <React.Fragment key={idx}>
+                                        {s.name}{s.isModerator ? ' (M)' : ''}{idx < sortedSpeakers.length - 1 ? ', ' : ''}
+                                    </React.Fragment>
+                                ));
+                            })()}
+                        </div>
+                    ) : (
+                        duration > 45 && firstSpeaker && (
+                            <div className="text-[9px] font-bold truncate mt-0.5 flex items-center gap-1.5 leading-tight opacity-80" style={{ color: textColor }}>
+                                <User size={8} />
+                                <span className="truncate">{firstSpeaker.name}</span>
+                            </div>
+                        )
                     )}
                 </div>
-                
-                {/* Speaker Display (Condensed or with Toggle) */}
-                {showSpeakers && speakers && speakers.length > 0 ? (
-                    <div 
-                        className="text-[9px] font-bold mt-1 leading-tight opacity-90 overflow-hidden" 
-                        style={{ 
-                            color: textColor,
-                            display: '-webkit-box',
-                            WebkitLineClamp: duration < 30 ? 1 : 2,
-                            WebkitBoxOrient: 'vertical'
-                        }}
-                    >
-                        {(() => {
-                            const sortedSpeakers = [...speakers].sort((a, b) => (b.isModerator ? 1 : 0) - (a.isModerator ? 1 : 0));
-                            return sortedSpeakers.map((s, idx) => (
-                                <React.Fragment key={idx}>
-                                    {s.name}{s.isModerator ? ' (M)' : ''}{idx < sortedSpeakers.length - 1 ? ', ' : ''}
-                                </React.Fragment>
-                            ));
-                        })()}
+
+                {/* Vertical Time Display */}
+                {duration >= 15 && (
+                    <div className="flex flex-col items-end justify-center ml-2 pl-2 border-l border-black/5 shrink-0 opacity-70">
+                        <span className="text-[8px] font-black leading-none">{minutesToTime(startTime, 8)}</span>
+                        <span className="text-[8px] font-black leading-none mt-1">{minutesToTime(startTime + duration, 8)}</span>
                     </div>
-                ) : (
-                    duration > 45 && firstSpeaker && (
-                        <div className="text-[9px] font-bold truncate mt-1 flex items-center gap-1.5 leading-tight opacity-80" style={{ color: textColor }}>
-                            {firstSpeaker.isModerator ? <Star size={8} fill="currentColor" /> : <User size={8} />}
-                            <span className="truncate">{firstSpeaker.name}</span>
-                        </div>
-                    )
                 )}
             </div>
 
