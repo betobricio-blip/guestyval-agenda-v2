@@ -173,6 +173,14 @@ export const TopNav: React.FC<TopNavProps> = ({
                 </div>
 
                 <button
+                    onClick={onExport}
+                    className="px-4 py-2 bg-white/10 text-white hover:bg-white/20 rounded-xl transition-all flex items-center gap-2 group font-black text-[11px] uppercase tracking-widest border border-white/20"
+                >
+                    <DownloadCloud size={18} className="text-emerald-400" />
+                    Export JSON
+                </button>
+
+                <button
                     onClick={onPublish}
                     className="px-5 py-2 bg-emerald-500 text-white hover:bg-emerald-400 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95 group font-black text-[11px] uppercase tracking-widest"
                 >

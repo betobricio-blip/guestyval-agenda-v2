@@ -30,6 +30,7 @@ interface SessionModalProps {
     sessions: Session[];
     startHour: number;
     endHour: number;
+    isAuthenticated?: boolean;
 }
 
 // Using imported time utilities
@@ -41,7 +42,8 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     onDelete,
     sessions,
     startHour,
-    endHour
+    endHour,
+    isAuthenticated = true
 }) => {
     const [activeTab, setActiveTab] = useState<'session' | 'speakers' | 'notes'>('session');
     const [type, setType] = useState(session.type || 'Other');
@@ -70,8 +72,8 @@ export const SessionModal: React.FC<SessionModalProps> = ({
         setColor(session.color);
         setSpeakers(session.speakers || []);
         setInternalNotes(session.internalNotes || '');
-        setActiveTab('session'); // Reset to first tab when session changes
-    }, [session.id]);
+        setActiveTab(isAuthenticated ? 'session' : 'notes'); 
+    }, [session.id, isAuthenticated]);
 
     useEffect(() => {
         const parsedInputMins = timeToMinutes(startTimeInput, 8);
@@ -179,6 +181,12 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     };
 
     const handleSave = () => {
+        if (!isAuthenticated) {
+            onUpdate({ internalNotes });
+            onClose();
+            return;
+        }
+
         // Ensure we have the latest time from the input field if it hasn't blurred
         let mins = timeToMinutes(startTimeInput, 8);
         if (mins !== null && !isNaN(mins)) {
@@ -222,8 +230,12 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                             })()}
                         </div>
                         <div className="flex flex-col">
-                            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none">Section Properties</h2>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1.5">Configure Session & Speakers</p>
+                            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none">
+                                {isAuthenticated ? 'Section Properties' : 'Session Notes'}
+                            </h2>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1.5">
+                                {isAuthenticated ? 'Configure Session & Speakers' : 'Planner observations and notes'}
+                            </p>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-100 text-slate-400 transition-colors">
@@ -234,14 +246,14 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                 {/* Tabs Navigation */}
                 <div className="flex px-6 border-b bg-slate-50/50">
                     <button 
-                        onClick={() => setActiveTab('session')}
-                        className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 ${activeTab === 'session' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                        onClick={() => isAuthenticated && setActiveTab('session')}
+                        className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 ${activeTab === 'session' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'} ${!isAuthenticated ? 'opacity-30 cursor-not-allowed' : ''}`}
                     >
                         1. Session Details
                     </button>
                     <button 
-                        onClick={() => setActiveTab('speakers')}
-                        className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 ${activeTab === 'speakers' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                        onClick={() => isAuthenticated && setActiveTab('speakers')}
+                        className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 ${activeTab === 'speakers' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'} ${!isAuthenticated ? 'opacity-30 cursor-not-allowed' : ''}`}
                     >
                         2. Speakers ({speakers.length})
                     </button>
@@ -250,7 +262,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                         className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 flex items-center gap-2 ${activeTab === 'notes' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
                     >
                         <MessageSquare size={14} />
-                        3. Notes {internalNotes.trim() && '●'}
+                        {isAuthenticated ? '3. Notes' : 'Session Notes'} {internalNotes.trim() && '●'}
                     </button>
                 </div>
 
@@ -475,16 +487,22 @@ export const SessionModal: React.FC<SessionModalProps> = ({
 
                 {/* Actions */}
                 <div className="px-6 py-4 bg-slate-50 border-t flex items-center justify-between">
-                    <button onClick={() => { onDelete(session.id); onClose(); }} className="flex items-center gap-2 text-xs font-bold text-red-500 hover:bg-red-50 px-3 py-2 rounded-lg tracking-tight transition-all">
-                        <Trash2 size={14} />
-                        Delete Section
-                    </button>
+                    {isAuthenticated ? (
+                        <button onClick={() => { onDelete(session.id); onClose(); }} className="flex items-center gap-2 text-xs font-bold text-red-500 hover:bg-red-50 px-3 py-2 rounded-lg tracking-tight transition-all">
+                            <Trash2 size={14} />
+                            Delete Section
+                        </button>
+                    ) : (
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            Limited View Mode
+                        </div>
+                    )}
                     <button
                         onClick={handleSave}
                         disabled={hasConflict}
                         className={`px-8 py-2.5 rounded-xl font-bold text-sm shadow-xl transition-all ${hasConflict ? 'bg-slate-300' : 'bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95 shadow-emerald-600/20'}`}
                     >
-                        Save Session
+                        {isAuthenticated ? 'Save Session' : 'Update Notes'}
                     </button>
                 </div>
             </div>

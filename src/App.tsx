@@ -432,7 +432,16 @@ function App() {
   };
 
   const handleUpdateSession = (sessionId: string, updates: Partial<Session>) => {
-    if (!isAuthenticated) return;
+    // If not authenticated, ONLY allow updating internalNotes
+    if (!isAuthenticated) {
+        const keys = Object.keys(updates);
+        if (keys.length === 1 && keys[0] === 'internalNotes') {
+            // Allow
+        } else {
+            toast.error("Editor login required for these changes");
+            return;
+        }
+    }
     setSessions(prev => prev.map(s => {
       if (s.id !== sessionId) return s;
       const updated = { ...s, ...updates };
@@ -609,7 +618,7 @@ function App() {
                 <SessionCell 
                   key={s.id} 
                   session={s} 
-                  onClick={() => !dragState && isAuthenticated && setEditingSession(s)} 
+                  onClick={() => !dragState && setEditingSession(s)} 
                   onInitiateDrag={(e) => isAuthenticated && initiateDrag(s.id, e)}
                   startHour={settings.startHour} 
                   endHour={settings.endHour}
@@ -797,15 +806,16 @@ function App() {
             </div>
           )}
       </main>
-      {editingSession && isAuthenticated && (
+      {editingSession && (
         <SessionModal 
           session={editingSession} 
           onClose={() => setEditingSession(null)} 
-          onUpdate={updates => handleUpdateSession(editingSession.id, updates)} 
-          onDelete={id => { setSessions(prev => prev.filter(s => s.id !== id)); setEditingSession(null); toast.success('Session deleted'); }} 
-          sessions={sessions} 
-          startHour={daySettings[editingSession.dayId]?.startHour || START_HOUR} 
-          endHour={daySettings[editingSession.dayId]?.endHour || END_HOUR} 
+          onUpdate={(up) => handleUpdateSession(editingSession.id, up)}
+          onDelete={(id) => setSessions(prev => prev.filter(s => s.id !== id))}
+          sessions={sessions}
+          startHour={daySettings[editingSession.dayId]?.startHour || 8}
+          endHour={daySettings[editingSession.dayId]?.endHour || 18}
+          isAuthenticated={isAuthenticated}
         />
       )}
       {persistenceMode && (
