@@ -103,7 +103,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             >
                 <div className="flex-1 flex flex-col justify-center min-w-0 py-1">
                     <div className="flex items-baseline gap-1.5 overflow-hidden">
-                        {type && (
+                        {type && type.toLowerCase() !== 'other' && (
                             <span className={`uppercase tracking-tighter font-black opacity-60 shrink-0 ${duration < 15 ? 'text-[7px]' : 'text-[8px]'}`}>
                                 [{type}]
                             </span>

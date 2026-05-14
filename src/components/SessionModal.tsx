@@ -15,6 +15,7 @@ const PRESETS: Record<string, { icon: any, color: string, label: string }> = {
   'Panel': { icon: Users, color: '#D0D7E1', label: 'Panel' },
   'Break': { icon: Coffee, color: '#E8DFD0', label: 'Break' },
   'Workshop': { icon: Wrench, color: '#D1E2D3', label: 'Workshop' },
+  'Guesty Workshop': { icon: Wrench, color: 'rgb(158, 188, 255)', label: 'Workshop' },
   'MasterClass': { icon: Star, color: '#CCE2E2', label: 'MasterClass' },
   'TPM Roundtables': { icon: Users, color: '#CCE2E2', label: 'Roundtable' },
   'Tech Talks': { icon: Star, color: '#E9E2D5', label: 'Tech Talk' },
@@ -85,11 +86,8 @@ export const SessionModal: React.FC<SessionModalProps> = ({
 
     const handleTypeSelect = (newType: string) => {
         if (newType === 'Other') {
-            const custom = prompt('Enter custom session type name:', 'Session');
-            if (custom) {
-                setType(custom);
-                setColor('#CCE2E2'); // Default color for Other
-            }
+            setType(''); // Empty by default for custom entry
+            setColor('#CCE2E2'); 
             return;
         }
 
@@ -270,18 +268,32 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                                         </div>
                                     </div>
                                 </div>
+                                
+                                {/* Custom Type Field (shown when Other is selected or custom type exists) */}
+                                {(!PRESETS[type] || type === '') && (
+                                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Custom Type Name</label>
+                                        <input 
+                                            type="text" 
+                                            value={type} 
+                                            onChange={e => setType(e.target.value)}
+                                            placeholder="Enter type (e.g. Networking)"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/20"
+                                        />
+                                    </div>
+                                )}
+                            </div>
 
-                                {/* Title */}
-                                <div className="space-y-3">
-                                    <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Session Title</label>
-                                    <input
-                                        type="text"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        placeholder="e.g. Opening Keynote"
-                                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 outline-none transition-all font-bold text-slate-900 text-sm shadow-sm"
-                                    />
-                                </div>
+                            {/* Title */}
+                            <div className="space-y-3">
+                                <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Session Title</label>
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="e.g. Opening Keynote"
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 outline-none transition-all font-bold text-slate-900 text-sm shadow-sm"
+                                />
                             </div>
 
                             {/* Description */}
