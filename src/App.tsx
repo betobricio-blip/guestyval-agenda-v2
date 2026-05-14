@@ -19,6 +19,7 @@ const START_HOUR = 8;
 const END_HOUR = 18;
 const STORAGE_KEY = 'guestyval_agenda_builder_v4';
 const AUTH_KEY = 'guestyval_auth_session';
+const GATEKEEPER_KEY = 'guestyval_gatekeeper_session';
 const MASTER_PASSWORD = 'GuestyVal2026';
 
 interface DaySettings {
@@ -143,6 +144,9 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return localStorage.getItem(AUTH_KEY) === 'true';
   });
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(() => {
+    return localStorage.getItem(GATEKEEPER_KEY) === 'true';
+  });
   const [viewMode, setViewMode] = useState<ViewMode>('Day 1');
   const [rooms, setRooms] = useState<Room[]>(INITIAL_ROOMS);
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -263,11 +267,21 @@ function App() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [rooms, sessions, daySettings, viewMode, isAuthenticated]);
 
+  const handleGatekeeperLogin = (password: string) => {
+    if (password === MASTER_PASSWORD) {
+      setIsAuthorized(true);
+      localStorage.setItem(GATEKEEPER_KEY, 'true');
+      toast.success('Welcome to GuestyVal Agenda');
+      return true;
+    }
+    return false;
+  };
+
   const handleLogin = (password: string) => {
     if (password === MASTER_PASSWORD) {
       setIsAuthenticated(true);
       localStorage.setItem(AUTH_KEY, 'true');
-      toast.success('Access Granted');
+      toast.success('Editor Access Granted');
       return true;
     }
     return false;
@@ -671,6 +685,15 @@ function App() {
   };
 
   // Remove early return to allow Read-Only mode
+
+  if (!isAuthorized) {
+    return (
+      <div className="h-screen w-screen overflow-hidden bg-[#0d4741]">
+        <Toaster position="bottom-right" />
+        <LoginOverlay onLogin={handleGatekeeperLogin} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen bg-slate-50 overflow-hidden font-sans group/app">
