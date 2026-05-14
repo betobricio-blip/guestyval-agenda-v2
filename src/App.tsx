@@ -668,7 +668,7 @@ function App() {
   };
 
   const handleExport = () => {
-    const currentState = { rooms, sessions, daySettings, viewMode, eventName };
+    const currentState = { rooms, sessions, daySettings, viewMode, eventName, showSpeakersInGrid };
     const data = {
         current: currentState,
         saved: JSON.parse(localStorage.getItem('guestyval_saved') || '[]')
@@ -700,6 +700,7 @@ function App() {
                 const settingsToSet = currentState.daySettings || daySettings;
                 const eventNameToSet = currentState.eventName || eventName;
                 const viewModeToSet = currentState.viewMode || viewMode;
+                const showSpeakersToSet = currentState.showSpeakersInGrid !== undefined ? currentState.showSpeakersInGrid : showSpeakersInGrid;
 
                 // Update state directly (mostly for visual feedback before reload)
                 setRooms(roomsToSet);
@@ -707,6 +708,7 @@ function App() {
                 setDaySettings(settingsToSet);
                 setViewMode(viewModeToSet);
                 setEventName(eventNameToSet);
+                setShowSpeakersInGrid(showSpeakersToSet);
                 
                 // CRITICAL: Update localStorage with the NEW state structure
                 const updatedFullState = {
@@ -714,7 +716,8 @@ function App() {
                     sessions: sessionsToSet,
                     daySettings: settingsToSet,
                     viewMode: viewModeToSet,
-                    eventName: eventNameToSet
+                    eventName: eventNameToSet,
+                    showSpeakersInGrid: showSpeakersToSet
                 };
                 
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFullState));
