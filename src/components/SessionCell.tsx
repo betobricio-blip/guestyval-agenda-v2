@@ -58,9 +58,9 @@ export const SessionCell: React.FC<SessionCellProps> = ({
     const currentEndMins = startTime + duration;
     const isNearBottom = (currentEndMins - (startHour * 60)) > ((endHour - startHour) * 60 * 0.5); // Bottom 50%
 
-    const tooltipClasses = `absolute w-[280px] bg-white text-slate-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 p-4 z-[9999] animate-in slide-in-from-top-1 fade-in duration-200 pointer-events-none 
+    const tooltipClasses = `absolute w-[340px] bg-white text-slate-800 rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.18)] border border-slate-200 p-5 z-[9999] animate-in slide-in-from-top-1 fade-in duration-200 pointer-events-none 
     ${isNearBottom ? 'bottom-0' : 'top-0'}
-    ${tooltipPosition === 'right' ? 'left-full ml-3' : 'right-full mr-3'}`;
+    ${tooltipPosition === 'right' ? 'left-full ml-4' : 'right-full mr-4'}`;
 
     return (
         <div
@@ -126,13 +126,21 @@ export const SessionCell: React.FC<SessionCellProps> = ({
             {/* Speaker Info Popover (Hover Tooltip) */}
             {isHovered && !suppressHover && (
                 <div className={tooltipClasses} style={{ zIndex: 3000 }}>
-                    <div className="flex flex-col gap-3">
-                        <div className="flex flex-col border-b border-slate-100 pb-2">
-                            <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest leading-tight">{type || 'Session'}</span>
-                            <h4 className="text-[13px] font-bold leading-tight mt-1 text-slate-900">{name}</h4>
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col border-b border-slate-100 pb-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">{type || 'Session'}</span>
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{duration}m</span>
+                            </div>
+                            <h4 className="text-[15px] font-black leading-tight mt-1.5 text-slate-900">{name}</h4>
+                            <div className="flex items-center gap-1.5 mt-2 text-[10px] font-bold text-slate-600">
+                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">
+                                    {minutesToTime(dragStartTime ?? startTime, 8)} — {minutesToTime((dragStartTime ?? startTime) + duration, 8)}
+                                </span>
+                            </div>
                             
                             {description && (
-                                <p className="text-[11px] font-normal text-slate-500 mt-2 leading-relaxed break-words whitespace-pre-wrap">
+                                <p className="text-[11px] font-medium text-slate-500 mt-3 leading-relaxed break-words whitespace-pre-wrap line-clamp-4">
                                     {description}
                                 </p>
                             )}
@@ -140,28 +148,29 @@ export const SessionCell: React.FC<SessionCellProps> = ({
                         
                         {speakers && speakers.length > 0 && (
                             <div className="space-y-3">
-                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Featured Speakers</span>
-                                {[...speakers].sort((a, b) => (a.isModerator === b.isModerator ? 0 : a.isModerator ? -1 : 1)).map(s => (
-                                    <div key={s.id} className="flex flex-col bg-slate-50/80 p-3 rounded-xl border border-slate-100">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xs font-black text-slate-900 leading-none">{s.name}</span>
-                                            {s.isModerator && (
-                                                <span className="text-[8px] font-black bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded flex items-center gap-1 border border-amber-200 uppercase tracking-widest">
-                                                    <Star size={6} fill="currentColor" /> Session Host
-                                                </span>
-                                            )}
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Speakers</span>
+                                <div className="space-y-2">
+                                    {[...speakers].sort((a, b) => (a.isModerator === b.isModerator ? 0 : a.isModerator ? -1 : 1)).map(s => (
+                                        <div key={s.id} className="flex flex-col py-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[12px] font-bold text-slate-900 leading-none">{s.name}</span>
+                                                {s.isModerator && (
+                                                    <span className="text-[8px] font-black bg-amber-400 text-white px-1 rounded flex items-center gap-0.5 uppercase tracking-tighter">
+                                                        <Star size={6} fill="white" /> Host
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span className="text-[10px] font-bold text-slate-400 leading-none mt-1">
+                                                {s.title}{s.company ? ` • ${s.company}` : ''}
+                                            </span>
                                         </div>
-                                        <span className="text-[10px] font-bold text-slate-500 leading-tight mt-1.5">
-                                            {s.title}{s.company ? ` • ${s.company}` : ''}
-                                        </span>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         )}
                         
-                        <div className="mt-1 pt-2 border-t border-slate-50 flex items-center justify-between text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-                            <span>{minutesToTime(dragStartTime ?? startTime, 8)} - {minutesToTime((dragStartTime ?? startTime) + duration, 8)}</span>
-                            <span>{duration} minutes</span>
+                        <div className="pt-2 flex items-center justify-between text-[8px] font-bold text-slate-300 uppercase tracking-widest">
+                            <span>GuestyVal Agenda Builder</span>
                         </div>
                     </div>
                 </div>
