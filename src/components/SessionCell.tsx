@@ -108,7 +108,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
                         <>
                             <span className="opacity-30 shrink-0 font-normal">|</span>
                             <span className="shrink-0 font-bold opacity-80">
-                                {minutesToTime(startTime, 8)} ({duration}m)
+                                {minutesToTime(startTime, 8)} - {minutesToTime(startTime + duration, 8)} ({duration}m)
                             </span>
                         </>
                     )}
