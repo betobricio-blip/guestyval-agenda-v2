@@ -60,8 +60,20 @@ const COLORS = MODERN_PALETTE.map(p => p.bg);
 
 // Helper Popover Component
 const RangeSettingsPopover = ({ current, onApply, onClose }: { current: DaySettings, onApply: (up: Partial<DaySettings>) => void, onClose: () => void }) => {
-  const [start, setStart] = useState(current.startHour);
-  const [end, setEnd] = useState(current.endHour);
+  const decimalToTimeStr = (decimal: number) => {
+    const h = Math.floor(decimal);
+    const m = Math.round((decimal - h) * 60);
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+  };
+
+  const timeStrToDecimal = (time: string) => {
+    const [h, m] = time.split(':').map(Number);
+    if (isNaN(h) || isNaN(m)) return 0;
+    return h + (m / 60);
+  };
+
+  const [startInput, setStartInput] = useState(decimalToTimeStr(current.startHour));
+  const [endInput, setEndInput] = useState(decimalToTimeStr(current.endHour));
 
   return (
     <div className="absolute top-10 left-2 w-56 bg-white rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-200 p-4 z-50 animate-in fade-in zoom-in-95 duration-200">
@@ -72,17 +84,38 @@ const RangeSettingsPopover = ({ current, onApply, onClose }: { current: DaySetti
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <div className="flex-1">
-            <label className="text-[9px] font-bold text-slate-400 block mb-1">Start Hour</label>
-            <input type="number" step="0.5" value={start} onChange={e => setStart(parseFloat(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500/20" />
+            <label className="text-[9px] font-bold text-slate-400 block mb-1">Start Time</label>
+            <input 
+              type="time" 
+              value={startInput} 
+              onChange={e => setStartInput(e.target.value)} 
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500/20" 
+            />
           </div>
           <div className="flex-1">
-            <label className="text-[9px] font-bold text-slate-400 block mb-1">End Hour</label>
-            <input type="number" step="0.5" value={end} onChange={e => setEnd(parseFloat(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500/20" />
+            <label className="text-[9px] font-bold text-slate-400 block mb-1">End Time</label>
+            <input 
+              type="time" 
+              value={endInput} 
+              onChange={e => setEndInput(e.target.value)} 
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500/20" 
+            />
           </div>
         </div>
         <div className="flex items-center gap-2 pt-2">
           <button onClick={onClose} className="flex-1 px-3 py-1.5 text-[10px] font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase">Cancel</button>
-          <button onClick={() => { onApply({ startHour: start, endHour: end }); onClose(); }} className="flex-grow px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all uppercase">Apply Range</button>
+          <button 
+            onClick={() => { 
+              onApply({ 
+                startHour: timeStrToDecimal(startInput), 
+                endHour: timeStrToDecimal(endInput) 
+              }); 
+              onClose(); 
+            }} 
+            className="flex-grow px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-[10px] font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all uppercase"
+          >
+            Apply Range
+          </button>
         </div>
       </div>
     </div>
