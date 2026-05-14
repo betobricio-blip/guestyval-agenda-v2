@@ -15,6 +15,7 @@ const PRESETS: Record<string, { icon: any, color: string, label: string }> = {
   'Panel': { icon: Users, color: '#D0D7E1', label: 'Panel' },
   'Break': { icon: Coffee, color: '#E8DFD0', label: 'Break' },
   'Workshop': { icon: Wrench, color: '#D1E2D3', label: 'Workshop' },
+  'MasterClass': { icon: Star, color: '#CCE2E2', label: 'MasterClass' },
   'TPM Roundtables': { icon: Users, color: '#CCE2E2', label: 'Roundtable' },
   'Tech Talks': { icon: Star, color: '#E9E2D5', label: 'Tech Talk' },
   'Other': { icon: User, color: '#CCE2E2', label: 'Session' }
@@ -83,6 +84,15 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     }, [startTimeInput, duration, sessions, session.id, session.roomId, session.dayId, startHour, startTime]);
 
     const handleTypeSelect = (newType: string) => {
+        if (newType === 'Other') {
+            const custom = prompt('Enter custom session type name:', 'Session');
+            if (custom) {
+                setType(custom);
+                setColor('#CCE2E2'); // Default color for Other
+            }
+            return;
+        }
+
         setType(newType);
         const preset = PRESETS[newType];
         if (!preset) return;
@@ -247,12 +257,12 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                                     <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Type Preset</label>
                                     <div className="relative">
                                         <select 
-                                            value={type} 
+                                            value={PRESETS[type] ? type : 'Other'} 
                                             onChange={(e) => handleTypeSelect(e.target.value)}
-                                            className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 appearance-none font-bold text-slate-800 outline-none transition-all text-sm shadow-sm"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500/20 appearance-none cursor-pointer"
                                         >
-                                            {Object.keys(PRESETS).map(t => (
-                                                <option key={t} value={t}>{t}</option>
+                                            {Object.keys(PRESETS).map(k => (
+                                                <option key={k} value={k}>{k}</option>
                                             ))}
                                         </select>
                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
