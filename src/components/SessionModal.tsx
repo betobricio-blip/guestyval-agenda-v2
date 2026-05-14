@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Session, Speaker } from '../types';
 import { 
     X, Trash2, ChevronDown, Plus, User, Mic, ChevronUp, 
-    ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench
+    ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench, MessageSquare, StickyNote
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { MODERN_PALETTE, minutesToTime, timeToMinutes } from '../constants';
@@ -43,7 +43,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     startHour,
     endHour
 }) => {
-    const [activeTab, setActiveTab] = useState<'session' | 'speakers'>('session');
+    const [activeTab, setActiveTab] = useState<'session' | 'speakers' | 'notes'>('session');
     const [type, setType] = useState(session.type || 'Other');
     const [name, setName] = useState(session.name);
     const [description, setDescription] = useState(session.description);
@@ -52,6 +52,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     const [startTimeInput, setStartTimeInput] = useState(minutesToTime(session.startTime, startHour));
     const [color, setColor] = useState(session.color);
     const [speakers, setSpeakers] = useState<Speaker[]>(session.speakers || []);
+    const [internalNotes, setInternalNotes] = useState(session.internalNotes || '');
     const [hasConflict, setHasConflict] = useState(false);
 
     // Sync only time-related fields in real-time (allowing background drag & drop)
@@ -68,6 +69,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
         setType(session.type || 'Other');
         setColor(session.color);
         setSpeakers(session.speakers || []);
+        setInternalNotes(session.internalNotes || '');
         setActiveTab('session'); // Reset to first tab when session changes
     }, [session.id]);
 
@@ -200,9 +202,9 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                 return;
             }
 
-            onUpdate({ name, description, duration, startTime: finalMins, color, type, speakers });
+            onUpdate({ name, description, duration, startTime: finalMins, color, type, speakers, internalNotes });
         } else {
-            onUpdate({ name, description, duration, startTime, color, type, speakers });
+            onUpdate({ name, description, duration, startTime, color, type, speakers, internalNotes });
         }
         onClose();
     };
@@ -242,6 +244,13 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                         className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 ${activeTab === 'speakers' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
                     >
                         2. Speakers ({speakers.length})
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('notes')}
+                        className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 flex items-center gap-2 ${activeTab === 'notes' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                    >
+                        <MessageSquare size={14} />
+                        3. Notes {internalNotes.trim() && '●'}
                     </button>
                 </div>
 
@@ -361,7 +370,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                                 </div>
                             </div>
                         </div>
-                    ) : (
+                    ) : activeTab === 'speakers' ? (
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
                             <div className="flex items-center justify-between">
                                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Speaker List Configuration</p>
@@ -428,6 +437,37 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                                         </div>
                                     ))
                                 )}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
+                            <div className="flex items-center justify-between">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Collaboration & Planner Notes</p>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <div className="p-8 bg-amber-50 rounded-3xl border-2 border-dashed border-amber-200 relative">
+                                    <div className="absolute top-4 right-4 text-amber-200">
+                                        <StickyNote size={40} />
+                                    </div>
+                                    <h3 className="text-sm font-black text-amber-900 uppercase tracking-widest mb-2">Internal Observations</h3>
+                                    <p className="text-xs text-amber-700/70 mb-6 leading-relaxed">
+                                        These notes are private and will only be seen by people who import this JSON file. 
+                                        Use this space for reminders, reviewer feedback, or logistics details.
+                                    </p>
+                                    
+                                    <textarea 
+                                        value={internalNotes}
+                                        onChange={(e) => setInternalNotes(e.target.value)}
+                                        placeholder="Write your internal notes here..."
+                                        className="w-full bg-white border border-amber-200 rounded-2xl p-5 text-sm font-medium text-amber-900 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-400 transition-all shadow-inner min-h-[250px] resize-none"
+                                    />
+                                </div>
+                                
+                                <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-2xl border border-slate-100">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Auto-saved to session state</p>
+                                </div>
                             </div>
                         </div>
                     )}

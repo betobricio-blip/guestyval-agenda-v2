@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GripVertical, User, Star } from 'lucide-react';
+import { GripVertical, User, Star, StickyNote, MessageSquare } from 'lucide-react';
 import { getContrastText } from '../utils';
 import { PIXELS_PER_MINUTE, minutesToTime } from '../constants';
 import type { Session } from '../types';
@@ -93,7 +93,7 @@ export const SessionCell: React.FC<SessionCellProps> = ({
 
             {/* Content Area */}
             <div 
-                className={`flex-1 flex items-center min-w-0 ${duration < 15 ? 'px-1' : 'px-2'}`}
+                className={`flex-1 flex items-center min-w-0 relative ${duration < 15 ? 'px-1' : 'px-2'}`}
                 onMouseDown={(e) => {
                     if (!readOnly && duration < 15) {
                         e.stopPropagation();
@@ -142,6 +142,31 @@ export const SessionCell: React.FC<SessionCellProps> = ({
                         )
                     )}
                 </div>
+
+                {/* Internal Note Corner Badge & Tooltip (Inside Content Area) */}
+                {session.internalNotes && session.internalNotes.trim() !== '' && (
+                    <div className="absolute top-1 right-1 group/note z-30">
+                        <div 
+                            className={`p-0.5 transition-colors cursor-help rounded-md ${isLight ? 'text-slate-900/30 hover:bg-black/5 hover:text-slate-900/60' : 'text-white/30 hover:bg-white/10 hover:text-white/70'}`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <StickyNote size={10} fill="currentColor" fillOpacity={0.2} />
+                        </div>
+                        
+                        {/* Sticky Note Styled Tooltip */}
+                        <div className="invisible group-hover/note:visible absolute right-0 top-full mt-2 w-56 p-4 bg-[#fff9c4] border border-amber-200 rounded-xl shadow-2xl z-[10000] animate-in fade-in zoom-in-95 duration-200 pointer-events-none origin-top-right">
+                            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-amber-300/50">
+                                 <MessageSquare size={12} className="text-amber-600" />
+                                 <span className="text-[10px] font-black uppercase tracking-[0.1em] text-amber-700/80">Planner Note</span>
+                            </div>
+                            <p className="text-[11px] font-bold text-amber-900 leading-relaxed whitespace-pre-wrap">
+                                {session.internalNotes}
+                            </p>
+                            {/* Little corner fold effect or arrow */}
+                            <div className="absolute -top-1.5 right-2.5 w-3 h-3 bg-[#fff9c4] border-t border-l border-amber-200 rotate-45" />
+                        </div>
+                    </div>
+                )}
 
                 {/* Vertical Time Display */}
                 {duration >= 15 && (

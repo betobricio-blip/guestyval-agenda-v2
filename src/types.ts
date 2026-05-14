@@ -20,6 +20,7 @@ export interface Session {
     type?: string;
     speakers?: Speaker[];
     isTransition?: boolean;
+    internalNotes?: string;
 }
 
 export interface RoomDaySettings {
