@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Session, Speaker } from '../types';
 import { 
     X, Trash2, ChevronDown, Plus, User, Mic, ChevronUp, 
-    ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench, MoveUp, MoveDown 
+    ChevronDown as ChevronDownIcon, Star, Coffee, Users, Wrench
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { MODERN_PALETTE, minutesToTime, timeToMinutes } from '../constants';
@@ -41,6 +41,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     startHour,
     endHour
 }) => {
+    const [activeTab, setActiveTab] = useState<'session' | 'speakers'>('session');
     const [type, setType] = useState(session.type || 'Other');
     const [name, setName] = useState(session.name);
     const [description, setDescription] = useState(session.description);
@@ -50,7 +51,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     const [color, setColor] = useState(session.color);
     const [speakers, setSpeakers] = useState<Speaker[]>(session.speakers || []);
     const [hasConflict, setHasConflict] = useState(false);
-    
+
     // Sync only time-related fields in real-time (allowing background drag & drop)
     useEffect(() => {
         setStartTime(session.startTime);
@@ -65,6 +66,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
         setType(session.type || 'Other');
         setColor(session.color);
         setSpeakers(session.speakers || []);
+        setActiveTab('session'); // Reset to first tab when session changes
     }, [session.id]);
 
     useEffect(() => {
@@ -92,7 +94,7 @@ export const SessionModal: React.FC<SessionModalProps> = ({
     };
 
     const handleAddSpeaker = () => {
-        if (speakers.length >= 5) return;
+        if (speakers.length >= 10) return; // Increased limit
         const newSpeaker: Speaker = {
             id: Math.random().toString(36).substring(7),
             name: '',
@@ -219,230 +221,194 @@ export const SessionModal: React.FC<SessionModalProps> = ({
                     </button>
                 </div>
 
-                {/* Content */}
-                <div className="p-6 space-y-6 overflow-y-auto">
-                    <div className="grid grid-cols-2 gap-6">
-                        <div className="space-y-5">
-                            {/* Session Type */}
-                            <div className="space-y-3 pb-2">
-                                <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Type Preset</label>
-                                <div className="relative">
-                                    <select 
-                                        value={type} 
-                                        onChange={(e) => handleTypeSelect(e.target.value)}
-                                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 appearance-none font-bold text-slate-800 outline-none transition-all text-sm shadow-sm"
-                                    >
-                                        {Object.keys(PRESETS).map(t => (
-                                            <option key={t} value={t}>{t}</option>
-                                        ))}
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                        <ChevronDown size={16} />
+                {/* Tabs Navigation */}
+                <div className="flex px-6 border-b bg-slate-50/50">
+                    <button 
+                        onClick={() => setActiveTab('session')}
+                        className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 ${activeTab === 'session' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                    >
+                        1. Session Details
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('speakers')}
+                        className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all border-b-2 ${activeTab === 'speakers' ? 'border-emerald-600 text-emerald-600 bg-white' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                    >
+                        2. Speakers ({speakers.length})
+                    </button>
+                </div>
+
+                {/* Content Area */}
+                <div className="flex-1 overflow-y-auto p-6">
+                    {activeTab === 'session' ? (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-left-2 duration-300">
+                            <div className="grid grid-cols-2 gap-6">
+                                {/* Session Type */}
+                                <div className="space-y-3">
+                                    <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Type Preset</label>
+                                    <div className="relative">
+                                        <select 
+                                            value={type} 
+                                            onChange={(e) => handleTypeSelect(e.target.value)}
+                                            className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 appearance-none font-bold text-slate-800 outline-none transition-all text-sm shadow-sm"
+                                        >
+                                            {Object.keys(PRESETS).map(t => (
+                                                <option key={t} value={t}>{t}</option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                            <ChevronDown size={16} />
+                                        </div>
                                     </div>
+                                </div>
+
+                                {/* Title */}
+                                <div className="space-y-3">
+                                    <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Session Title</label>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder="e.g. Opening Keynote"
+                                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 outline-none transition-all font-bold text-slate-900 text-sm shadow-sm"
+                                    />
                                 </div>
                             </div>
 
-                            {/* Title */}
-                            <div className="space-y-3 pb-2">
-                                <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Session Title</label>
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    placeholder="e.g. Opening Keynote"
-                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 outline-none transition-all font-bold text-slate-900 text-sm shadow-sm"
-                                />
-                            </div>
-
                             {/* Description */}
-                            <div className="space-y-3 pb-2 text-left">
+                            <div className="space-y-3">
                                 <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Description (Abstract)</label>
                                 <textarea
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="Add session details, abstract or notes here..."
-                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 outline-none transition-all text-slate-600 text-xs min-h-[90px] resize-none shadow-sm leading-relaxed"
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 outline-none transition-all text-slate-600 text-xs min-h-[120px] resize-none shadow-sm leading-relaxed"
                                 />
                             </div>
 
-                             {/* Constraints with Steppers */}
-                             <div className="flex gap-4 pb-2">
-                                 <div className="space-y-3 flex-[1.2]">
-                                     <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Start Time</label>
-                                     <div className="relative group">
-                                         <input
-                                             type="text"
-                                             value={startTimeInput}
-                                             onChange={(e) => setStartTimeInput(e.target.value)}
-                                             onBlur={handleTimeBlur}
-                                             className={`w-full pl-4 pr-10 py-3 border rounded-xl font-bold outline-none transition-all text-sm shadow-sm ${hasConflict ? 'border-red-500 text-red-600 bg-red-50' : 'bg-white border-slate-200 focus:border-slate-400'}`}
-                                         />
-                                         <div className="absolute right-1 top-1.5 bottom-1.5 flex flex-col gap-0.5 w-7">
-                                            <button 
-                                                onClick={() => handleShiftTime(5)}
-                                                className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white active:bg-slate-100 transition-all shadow-sm"
-                                            >
-                                                <ChevronUp size={12} />
-                                            </button>
-                                            <button 
-                                                onClick={() => handleShiftTime(-5)}
-                                                className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white active:bg-slate-100 transition-all shadow-sm"
-                                            >
-                                                <ChevronDownIcon size={12} />
-                                            </button>
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <div className="space-y-3 flex-1">
-                                     <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Dur (m)</label>
-                                     <div className="relative group">
-                                        <input
-                                            type="number"
-                                            value={duration}
-                                            onChange={(e) => {
-                                                const val = parseInt(e.target.value) || 20;
-                                                setDuration(val);
-                                                onUpdate({ duration: val });
-                                            }}
-                                            className={`w-full pl-4 pr-10 py-3 border rounded-xl font-bold outline-none transition-all text-sm appearance-none shadow-sm ${hasConflict ? 'border-red-500 text-red-600 bg-red-50' : 'bg-white border-slate-200 focus:border-slate-400'}`}
-                                            style={{ MozAppearance: 'textfield' }}
-                                        />
-                                        <div className="absolute right-1 top-1.5 bottom-1.5 flex flex-col gap-0.5 w-7">
-                                            <button 
-                                                onClick={() => handleShiftDuration(5)}
-                                                className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white active:bg-slate-100 transition-all shadow-sm"
-                                            >
-                                                <ChevronUp size={12} />
-                                            </button>
-                                            <button 
-                                                onClick={() => handleShiftDuration(-5)}
-                                                className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white active:bg-slate-100 transition-all shadow-sm"
-                                            >
-                                                <ChevronDownIcon size={12} />
-                                            </button>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
+                            <div className="grid grid-cols-2 gap-6">
+                                {/* Time & Duration */}
+                                <div className="flex gap-4">
+                                    <div className="space-y-3 flex-[1.2]">
+                                        <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Start Time</label>
+                                        <div className="relative group">
+                                            <input
+                                                type="text"
+                                                value={startTimeInput}
+                                                onChange={(e) => setStartTimeInput(e.target.value)}
+                                                onBlur={handleTimeBlur}
+                                                className={`w-full pl-4 pr-10 py-3 border rounded-xl font-bold outline-none transition-all text-sm shadow-sm ${hasConflict ? 'border-red-500 text-red-600 bg-red-50' : 'bg-white border-slate-200 focus:border-slate-400'}`}
+                                            />
+                                            <div className="absolute right-1 top-1.5 bottom-1.5 flex flex-col gap-0.5 w-7">
+                                                <button onClick={() => handleShiftTime(5)} className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white transition-all shadow-sm"><ChevronUp size={12} /></button>
+                                                <button onClick={() => handleShiftTime(-5)} className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white transition-all shadow-sm"><ChevronDownIcon size={12} /></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3 flex-1">
+                                        <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Dur (m)</label>
+                                        <div className="relative group">
+                                            <input
+                                                type="number"
+                                                value={duration}
+                                                onChange={(e) => setDuration(parseInt(e.target.value) || 5)}
+                                                className={`w-full pl-4 pr-10 py-3 border rounded-xl font-bold outline-none transition-all text-sm shadow-sm ${hasConflict ? 'border-red-500 text-red-600 bg-red-50' : 'bg-white border-slate-200 focus:border-slate-400'}`}
+                                            />
+                                            <div className="absolute right-1 top-1.5 bottom-1.5 flex flex-col gap-0.5 w-7">
+                                                <button onClick={() => handleShiftDuration(5)} className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white transition-all shadow-sm"><ChevronUp size={12} /></button>
+                                                <button onClick={() => handleShiftDuration(-5)} className="flex-1 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-md text-slate-400 hover:text-slate-900 hover:bg-white transition-all shadow-sm"><ChevronDownIcon size={12} /></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            {/* Theme Picker */}
-                            <div className="space-y-3">
-                                <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Color Palette</label>
-                                <div className="grid grid-cols-5 gap-2.5">
-                                    {COLORS.map((c) => (
-                                        <button
-                                            key={c}
-                                            onClick={() => setColor(c)}
-                                            className={`w-full aspect-[1.3/1] rounded-lg border-2 transition-all flex items-center justify-center group ${color === c ? 'border-slate-900 scale-105 shadow-md' : 'border-slate-100 opacity-80 hover:opacity-100 hover:border-slate-200'}`}
-                                            style={{ backgroundColor: c }}
-                                        >
-                                            {color === c && (
-                                                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getContrastText(c) }}></div>
-                                            )}
-                                        </button>
-                                    ))}
+                                {/* Color Picker */}
+                                <div className="space-y-3">
+                                    <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500 ml-1">Theme</label>
+                                    <div className="grid grid-cols-6 gap-2">
+                                        {COLORS.map((c) => (
+                                            <button
+                                                key={c}
+                                                onClick={() => setColor(c)}
+                                                className={`aspect-square rounded-lg border-2 transition-all flex items-center justify-center ${color === c ? 'border-slate-900 scale-110 shadow-md' : 'border-slate-100 hover:border-slate-200'}`}
+                                                style={{ backgroundColor: c }}
+                                            >
+                                                {color === c && <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getContrastText(c) }}></div>}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        {/* Speaker Management Section */}
-                        <div className="space-y-4 border-l pl-0 flex flex-col min-h-0">
-                                <div className="flex items-center justify-between shrink-0 mb-2 px-6">
-                                <label className="text-xs font-black uppercase tracking-[0.1em] text-slate-500">Speakers ({speakers.length}/5)</label>
+                    ) : (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
+                            <div className="flex items-center justify-between">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Speaker List Configuration</p>
                                 <button 
                                     onClick={handleAddSpeaker} 
-                                    disabled={speakers.length >= 5}
-                                    className="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 disabled:opacity-30 flex items-center gap-2 transition-all shadow-md active:scale-95"
+                                    className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 transition-all flex items-center gap-2 shadow-xl shadow-slate-900/10 active:scale-95"
                                 >
-                                    <Plus size={10} strokeWidth={4} /> Add Speaker
+                                    <Plus size={14} strokeWidth={3} /> Add New Speaker
                                 </button>
                             </div>
 
-                            <div className="space-y-6 overflow-y-auto px-6 flex-1 pb-4">
-                                {speakers.length === 0 && (
-                                    <div className="text-center py-12 border-2 border-dashed border-slate-100 rounded-3xl opacity-40 bg-slate-50/50">
-                                        <User size={32} className="mx-auto mb-3 text-slate-300" />
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">No Speakers Profiled</p>
+                            <div className="space-y-4">
+                                {speakers.length === 0 ? (
+                                    <div className="text-center py-20 border-2 border-dashed border-slate-100 rounded-3xl opacity-40">
+                                        <User size={48} className="mx-auto mb-4 text-slate-300" />
+                                        <p className="text-xs font-black uppercase tracking-widest text-slate-400">No speakers assigned to this session</p>
                                     </div>
+                                ) : (
+                                    speakers.map((s, idx) => (
+                                        <div key={s.id} className="p-6 bg-slate-50 rounded-3xl border border-slate-200 relative group hover:border-slate-400 transition-all hover:bg-white hover:shadow-xl hover:shadow-slate-200/50">
+                                            <div className="grid grid-cols-12 gap-6 items-start">
+                                                {/* Reorder Icons */}
+                                                <div className="col-span-1 flex flex-col gap-2 pt-8">
+                                                    <button disabled={idx === 0} onClick={() => handleMoveSpeaker(idx, 'up')} className="p-1.5 text-slate-300 hover:text-emerald-600 disabled:opacity-0 transition-colors"><ChevronUp size={16} strokeWidth={3}/></button>
+                                                    <button disabled={idx === speakers.length - 1} onClick={() => handleMoveSpeaker(idx, 'down')} className="p-1.5 text-slate-300 hover:text-emerald-600 disabled:opacity-0 transition-colors"><ChevronDownIcon size={16} strokeWidth={3}/></button>
+                                                </div>
+
+                                                <div className="col-span-11 space-y-4">
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Speaker Name</label>
+                                                            <input placeholder="Jane Doe" value={s.name} onChange={e => handleUpdateSpeaker(s.id, { name: e.target.value })} className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-emerald-600/10 focus:border-emerald-600 transition-all shadow-sm" />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Company / Brand</label>
+                                                            <input placeholder="e.g. Guesty" value={s.company} onChange={e => handleUpdateSpeaker(s.id, { company: e.target.value })} className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-emerald-600/10 focus:border-emerald-600 transition-all shadow-sm" />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="grid grid-cols-12 gap-4">
+                                                        <div className="col-span-8 space-y-1.5">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Position / Title</label>
+                                                            <input placeholder="e.g. Product Director" value={s.title} onChange={e => handleUpdateSpeaker(s.id, { title: e.target.value })} className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-emerald-600/10 focus:border-emerald-600 transition-all shadow-sm" />
+                                                        </div>
+                                                        <div className="col-span-4 space-y-1.5 flex flex-col justify-end">
+                                                            <button 
+                                                                onClick={() => handleToggleHost(s.id)}
+                                                                className={`h-[46px] w-full rounded-xl transition-all flex items-center justify-center gap-2 border font-black text-[10px] uppercase tracking-widest ${s.isModerator ? 'bg-amber-500 border-amber-600 text-white shadow-lg shadow-amber-500/20' : 'bg-white border-slate-200 text-slate-400 hover:border-amber-500 hover:text-amber-500'}`}
+                                                            >
+                                                                <Star size={14} fill={s.isModerator ? "white" : "none"} />
+                                                                {s.isModerator ? 'Primary Host' : 'Mark Host'}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button 
+                                                onClick={() => handleRemoveSpeaker(s.id)}
+                                                className="absolute -top-3 -right-3 w-8 h-8 bg-white shadow-2xl rounded-full flex items-center justify-center text-red-500 hover:bg-red-50 transition-all border border-slate-100"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
+                                    ))
                                 )}
-                                {speakers.map((s, idx) => (
-                                    <div key={s.id} className="p-5 bg-white rounded-2xl border border-slate-200 relative group animate-in slide-in-from-right-2 hover:border-slate-400 transition-colors shadow-sm">
-                                        {/* Small Tucked Reordering Arrows: Positioned Absolutely on Right to avoid pushing content */}
-                                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                                            <button 
-                                                disabled={idx === 0}
-                                                onClick={() => handleMoveSpeaker(idx, 'up')}
-                                                className="p-1 text-slate-300 hover:text-slate-900 disabled:opacity-0 bg-white/80 rounded-md shadow-sm border border-slate-100"
-                                            >
-                                                <MoveUp size={10} />
-                                            </button>
-                                            <button 
-                                                disabled={idx === speakers.length - 1}
-                                                onClick={() => handleMoveSpeaker(idx, 'down')}
-                                                className="p-1 text-slate-300 hover:text-slate-900 disabled:opacity-0 bg-white/80 rounded-md shadow-sm border border-slate-100"
-                                            >
-                                                <MoveDown size={10} />
-                                            </button>
-                                        </div>
-
-                                        <div className="space-y-4 pr-8">
-                                            {/* Line 1: Full Name */}
-                                            <div className="space-y-1.5">
-                                                <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
-                                                <input 
-                                                    placeholder="e.g. Jane Doe"
-                                                    value={s.name}
-                                                    onChange={e => handleUpdateSpeaker(s.id, { name: e.target.value })}
-                                                    className="w-full bg-slate-50 border border-slate-100 rounded-xl p-3 text-sm font-bold outline-none focus:bg-white focus:border-slate-300 transition-all"
-                                                />
-                                            </div>
-
-                                            {/* Line 2: Company */}
-                                            <div className="space-y-1.5">
-                                                <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Company / Organization</label>
-                                                <input 
-                                                    placeholder="e.g. Tech Global Inc"
-                                                    value={s.company}
-                                                    onChange={e => handleUpdateSpeaker(s.id, { company: e.target.value })}
-                                                    className="w-full bg-slate-50 border border-slate-100 rounded-xl p-3 text-sm font-bold outline-none focus:bg-white focus:border-slate-300 transition-all"
-                                                />
-                                            </div>
-
-                                            {/* Line 3: Title + Host Toggle */}
-                                            <div className="flex items-end gap-5">
-                                                <div className="flex-1 space-y-1.5">
-                                                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Title / Position</label>
-                                                    <input 
-                                                        placeholder="e.g. Senior Architect"
-                                                        value={s.title}
-                                                        onChange={e => handleUpdateSpeaker(s.id, { title: e.target.value })}
-                                                        className="w-full bg-slate-50 border border-slate-100 rounded-xl p-3 text-sm font-bold outline-none focus:bg-white focus:border-slate-300 transition-all"
-                                                    />
-                                                </div>
-                                                <div className="flex flex-col space-y-2 items-center shrink-0">
-                                                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 whitespace-nowrap">Mark as Host</label>
-                                                    <button 
-                                                        onClick={() => handleToggleHost(s.id)}
-                                                        className={`h-9 px-4 rounded-xl transition-all flex items-center gap-2 border shadow-sm ${s.isModerator ? 'bg-amber-500 border-amber-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-amber-500 hover:border-amber-500'}`}
-                                                    >
-                                                        {s.isModerator ? <Star size={14} fill="white" /> : <Star size={14} />}
-                                                        <span className="text-[10px] font-black uppercase tracking-wider">{s.isModerator ? 'Host' : 'Off'}</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button 
-                                            onClick={() => handleRemoveSpeaker(s.id)}
-                                            className="absolute -top-2 -right-2 w-7 h-7 bg-white shadow-xl rounded-full flex items-center justify-center text-red-500 hover:scale-110 active:scale-95 border border-slate-100 opacity-0 group-hover:opacity-100 transition-all z-10"
-                                        >
-                                            <X size={14} strokeWidth={3} />
-                                        </button>
-                                    </div>
-                                ))}
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Actions */}
