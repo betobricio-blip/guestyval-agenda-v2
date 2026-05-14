@@ -197,7 +197,7 @@ function App() {
 
   const [eventName, setEventName] = useState<string>('GuestyVal 2026');
   const [showGlobalSettings, setShowGlobalSettings] = useState(false);
-  const [showSpeakersInGrid, setShowSpeakersInGrid] = useState(false);
+  const [showSpeakersInGrid, setShowSpeakersInGrid] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
 
   const [dragState, setDragState] = useState<{
@@ -290,6 +290,7 @@ function App() {
         if (config.daySettings) setDaySettings(config.daySettings);
         if (config.viewMode) setViewMode(config.viewMode);
         if (config.eventName) setEventName(config.eventName);
+        if (config.showSpeakersInGrid !== undefined) setShowSpeakersInGrid(config.showSpeakersInGrid);
       } catch (e) {
         console.error('Storage sync failed', e);
       }
@@ -658,7 +659,7 @@ function App() {
   };
 
   const handleSaveApp = (name: string) => {
-      const state = { rooms, sessions, daySettings, eventName, name, timestamp: Date.now() };
+      const state = { rooms, sessions, daySettings, eventName, viewMode, showSpeakersInGrid, name, timestamp: Date.now() };
       const saved = JSON.parse(localStorage.getItem('guestyval_saved') || '[]');
       const updated = [...saved.filter((s:any) => s.name !== name), state];
       localStorage.setItem('guestyval_saved', JSON.stringify(updated));
