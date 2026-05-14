@@ -11,14 +11,14 @@ import { getContrastText } from '../utils';
 const COLORS = MODERN_PALETTE.map(p => p.bg);
 
 const PRESETS: Record<string, { icon: any, color: string, label: string }> = {
-  'Keynote': { icon: Mic, color: '#D9D7E8', label: 'Keynote' },
-  'Panel': { icon: Users, color: '#D0D7E1', label: 'Panel' },
-  'Break': { icon: Coffee, color: '#E8DFD0', label: 'Break' },
+  'Keynote': { icon: Mic, color: 'rgb(140, 190, 190)', label: 'Keynote' },
+  'Panel': { icon: Users, color: 'rgb(178, 228, 227)', label: 'Panel' },
+  'Break': { icon: Coffee, color: 'rgb(238, 250, 208)', label: 'Break' },
   'Workshop': { icon: Wrench, color: '#D1E2D3', label: 'Workshop' },
   'Guesty Workshop': { icon: Wrench, color: 'rgb(158, 188, 255)', label: 'Workshop' },
   'MasterClass': { icon: Star, color: '#CCE2E2', label: 'MasterClass' },
-  'TPM Roundtables': { icon: Users, color: '#CCE2E2', label: 'Roundtable' },
-  'Tech Talks': { icon: Star, color: '#E9E2D5', label: 'Tech Talk' },
+  'TPM Roundtables': { icon: Users, color: 'rgb(233, 226, 213)', label: 'Roundtable' },
+  'Tech Talks': { icon: Star, color: 'rgb(90, 45, 45)', label: 'Tech Talk' },
   'Other': { icon: User, color: '#CCE2E2', label: 'Session' }
 };
 
