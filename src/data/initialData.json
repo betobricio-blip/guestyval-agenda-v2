@@ -886,42 +886,6 @@
             "isModerator": false
           }
         ]
-      },
-      {
-        "id": "shv75h6n",
-        "roomId": "r2",
-        "dayId": "day-2",
-        "name": "Blocked",
-        "description": "",
-        "startTime": 465,
-        "duration": 115,
-        "color": "#FE8673",
-        "type": "Other",
-        "speakers": []
-      },
-      {
-        "id": "seexinmi",
-        "roomId": "r3",
-        "dayId": "day-2",
-        "name": "Blocked",
-        "description": "",
-        "startTime": 465,
-        "duration": 115,
-        "color": "#FE8673",
-        "type": "Other",
-        "speakers": []
-      },
-      {
-        "id": "s7gq9yxw",
-        "roomId": "r1",
-        "dayId": "day-2",
-        "name": "Guesty Product Roadmap",
-        "description": "",
-        "startTime": 490,
-        "duration": 90,
-        "color": "#8CBEBE",
-        "type": "Keynote",
-        "speakers": []
       }
     ],
     "daySettings": {
@@ -1492,18 +1456,6 @@
               "isModerator": false
             }
           ]
-        },
-        {
-          "id": "skrypuhl",
-          "roomId": "r1",
-          "dayId": "day-1",
-          "name": "Vered's closing remarks",
-          "description": "",
-          "startTime": 605,
-          "duration": 5,
-          "color": "#B2E4E3",
-          "type": "Other",
-          "speakers": []
         }
       ],
       "daySettings": {

@@ -692,24 +692,41 @@ function App() {
             const savedConfigurations = data.saved || (Array.isArray(data) ? data : []);
 
             if (currentState) {
-                // Update state directly to trigger re-render and persistence effect
-                if (currentState.rooms) setRooms(currentState.rooms);
-                if (currentState.sessions) setSessions(currentState.sessions);
-                if (currentState.daySettings) setDaySettings(currentState.daySettings);
-                if (currentState.viewMode) setViewMode(currentState.viewMode);
-                if (currentState.eventName) setEventName(currentState.eventName);
+                // Ensure we have the minimum required data structure
+                const roomsToSet = currentState.rooms || rooms;
+                const sessionsToSet = currentState.sessions || sessions;
+                const settingsToSet = currentState.daySettings || daySettings;
+                const eventNameToSet = currentState.eventName || eventName;
+                const viewModeToSet = currentState.viewMode || viewMode;
+
+                // Update state directly (mostly for visual feedback before reload)
+                setRooms(roomsToSet);
+                setSessions(sessionsToSet);
+                setDaySettings(settingsToSet);
+                setViewMode(viewModeToSet);
+                setEventName(eventNameToSet);
                 
-                // Also update localStorage for safety before reload
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+                // CRITICAL: Update localStorage with the NEW state structure
+                const updatedFullState = {
+                    rooms: roomsToSet,
+                    sessions: sessionsToSet,
+                    daySettings: settingsToSet,
+                    viewMode: viewModeToSet,
+                    eventName: eventNameToSet
+                };
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFullState));
             }
             
-            if (savedConfigurations.length > 0) {
+            if (savedConfigurations && Array.isArray(savedConfigurations) && savedConfigurations.length > 0) {
                 localStorage.setItem('guestyval_saved', JSON.stringify(savedConfigurations));
             }
 
             toast.success('Data imported successfully');
-            // Small delay before reload to ensure state persistence completes
-            setTimeout(() => window.location.reload(), 500);
+            // Small delay to ensure storage write is complete before reload
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
         } catch (error) {
             console.error('Import error:', error);
             toast.error('Failed to import: Invalid file format');
