@@ -18,6 +18,8 @@ interface TopNavProps {
     activeDayName: string;
     activeSaveName: string | null;
     isAuthenticated: boolean;
+    showSpeakersInGrid: boolean;
+    onToggleSpeakers: () => void;
 }
 
 export const TopNav: React.FC<TopNavProps> = ({
@@ -35,7 +37,9 @@ export const TopNav: React.FC<TopNavProps> = ({
     onOpenGlobalSettings,
     activeDayName,
     activeSaveName,
-    isAuthenticated
+    isAuthenticated,
+    showSpeakersInGrid,
+    onToggleSpeakers
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [showActions, setShowActions] = React.useState(false);
@@ -114,6 +118,13 @@ export const TopNav: React.FC<TopNavProps> = ({
                             {mode}
                         </button>
                     ))}
+                </div>
+
+                <div className="flex items-center gap-2 ml-4 px-2 py-1 bg-white/5 rounded-lg border border-white/10 group cursor-pointer hover:bg-white/10 transition-all select-none" onClick={onToggleSpeakers}>
+                    <span className="text-[9px] font-black text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">Speakers</span>
+                    <div className={`w-7 h-3.5 rounded-full relative transition-all duration-300 ${showSpeakersInGrid ? 'bg-emerald-500' : 'bg-slate-700'}`}>
+                        <div className={`absolute top-0.5 w-2.5 h-2.5 bg-white rounded-full transition-all duration-300 shadow-sm`} style={{ left: showSpeakersInGrid ? '16px' : '2px' }}></div>
+                    </div>
                 </div>
             </div>
 

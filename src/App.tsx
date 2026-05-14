@@ -197,6 +197,7 @@ function App() {
 
   const [eventName, setEventName] = useState<string>('GuestyVal 2026');
   const [showGlobalSettings, setShowGlobalSettings] = useState(false);
+  const [showSpeakersInGrid, setShowSpeakersInGrid] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
   const [dragState, setDragState] = useState<{
@@ -296,9 +297,9 @@ function App() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    const state = { rooms, sessions, daySettings, viewMode, eventName };
+    const state = { rooms, sessions, daySettings, viewMode, eventName, showSpeakersInGrid };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [rooms, sessions, daySettings, viewMode, isAuthenticated]);
+  }, [rooms, sessions, daySettings, viewMode, eventName, showSpeakersInGrid, isAuthenticated]);
 
   const handleGatekeeperLogin = (password: string) => {
     if (password === MASTER_PASSWORD) {
@@ -616,6 +617,7 @@ function App() {
                   tooltipPosition={roomIdx === visibleRooms.length - 1 ? 'left' : 'right'}
                   readOnly={!isAuthenticated}
                   dragStartTime={dragState?.sessionId === s.id ? dragGhost?.startTime : null}
+                  showSpeakers={showSpeakersInGrid}
                 />
             ))}
           </RoomColumn>
@@ -776,6 +778,8 @@ function App() {
         activeDayName={activeDayName} 
         activeSaveName={activeSaveName} 
         isAuthenticated={isAuthenticated}
+        showSpeakersInGrid={showSpeakersInGrid}
+        onToggleSpeakers={() => setShowSpeakersInGrid(!showSpeakersInGrid)}
       />
       <main className="flex-1 overflow-hidden flex flex-col print:overflow-visible bg-white">
           {viewMode === 'Split' ? (

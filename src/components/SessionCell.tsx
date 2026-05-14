@@ -15,6 +15,7 @@ interface SessionCellProps {
     tooltipPosition?: 'left' | 'right';
     readOnly?: boolean;
     dragStartTime?: number | null;
+    showSpeakers?: boolean;
 }
 
 export const SessionCell: React.FC<SessionCellProps> = ({ 
@@ -27,7 +28,8 @@ export const SessionCell: React.FC<SessionCellProps> = ({
     suppressHover,
     tooltipPosition = 'right',
     readOnly,
-    dragStartTime
+    dragStartTime,
+    showSpeakers
 }) => {
     const { name, description, startTime, duration, color, speakers, type } = session;
     const firstSpeaker = speakers && speakers.length > 0 ? speakers[0] : null;
@@ -114,12 +116,33 @@ export const SessionCell: React.FC<SessionCellProps> = ({
                     )}
                 </div>
                 
-                {/* Speaker Display (>45m) */}
-                {duration > 45 && firstSpeaker && (
-                    <div className="text-[9px] font-bold truncate mt-1 flex items-center gap-1.5 leading-tight opacity-80" style={{ color: textColor }}>
-                        {firstSpeaker.isModerator ? <Star size={8} fill="currentColor" /> : <User size={8} />}
-                        <span className="truncate">{firstSpeaker.name} {firstSpeaker.company ? `(${firstSpeaker.company})` : ''}</span>
+                {/* Speaker Display (Condensed or with Toggle) */}
+                {showSpeakers && speakers && speakers.length > 0 ? (
+                    <div 
+                        className="text-[9px] font-bold mt-1 leading-tight opacity-90 overflow-hidden" 
+                        style={{ 
+                            color: textColor,
+                            display: '-webkit-box',
+                            WebkitLineClamp: duration < 30 ? 1 : 2,
+                            WebkitBoxOrient: 'vertical'
+                        }}
+                    >
+                        {(() => {
+                            const sortedSpeakers = [...speakers].sort((a, b) => (b.isModerator ? 1 : 0) - (a.isModerator ? 1 : 0));
+                            return sortedSpeakers.map((s, idx) => (
+                                <React.Fragment key={idx}>
+                                    {s.name}{s.isModerator ? ' (M)' : ''}{idx < sortedSpeakers.length - 1 ? ', ' : ''}
+                                </React.Fragment>
+                            ));
+                        })()}
                     </div>
+                ) : (
+                    duration > 45 && firstSpeaker && (
+                        <div className="text-[9px] font-bold truncate mt-1 flex items-center gap-1.5 leading-tight opacity-80" style={{ color: textColor }}>
+                            {firstSpeaker.isModerator ? <Star size={8} fill="currentColor" /> : <User size={8} />}
+                            <span className="truncate">{firstSpeaker.name}</span>
+                        </div>
+                    )
                 )}
             </div>
 
